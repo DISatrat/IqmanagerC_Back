@@ -26,7 +26,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer {
+public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebMvcConfigurer  {
 
     private final UserDetailsService userDetailsService;
     private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
@@ -62,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .exposedHeaders("category", "QP", "*");
 
     }
+
 
     @Bean
     public static PasswordEncoder passwordEncoder() {
