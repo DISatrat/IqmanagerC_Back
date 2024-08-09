@@ -59,8 +59,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .allowedOrigins("http://95.163.221.185:3000","http://localhost:3000")
                 .allowedMethods("*")
                 .allowCredentials(true)
-                .exposedHeaders("category","*")
-                .exposedHeaders("category","QP");
+                .exposedHeaders("category", "QP", "*");
+
     }
 
     @Bean
