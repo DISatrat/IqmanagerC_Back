@@ -17,7 +17,7 @@ import static org.iqmanager.ApplicationC.URL_WEB;
 
 @Validated
 @RestController
-@RequestMapping(value = "/api",produces = MediaType.IMAGE_JPEG_VALUE)
+@RequestMapping(value = "/api",produces = MediaType.ALL_VALUE)
 @CrossOrigin(origins = URL_WEB)
 public class ResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ResourcesController.class);
