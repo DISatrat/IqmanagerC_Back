@@ -43,14 +43,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
+//    @Override
+//    public void addCorsMappings(CorsRegistry registry) {
+//        registry.addMapping("/**")
+//                .allowedOrigins("http://localhost:3000")
+//                .allowedMethods("*")
+//                .allowCredentials(true)
+//                .exposedHeaders("category")
+//                .exposedHeaders("category","QP");
+//    }
+
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedMethods("*")
-                .allowCredentials(true)
-                .exposedHeaders("category")
-                .exposedHeaders("category","QP");
+                .allowedOrigins("http://95.163.221.185:3000")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                .allowCredentials(true);
     }
 
     @Bean
