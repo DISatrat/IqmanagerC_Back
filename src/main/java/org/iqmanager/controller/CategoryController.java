@@ -26,7 +26,7 @@ import static org.iqmanager.ApplicationC.URL_WEB;
 @Validated
 @RestController
 @RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
-@CrossOrigin(origins = URL_WEB)
+//@CrossOrigin(origins = URL_WEB)
 public class CategoryController {
 
     private final Logger logger = LoggerFactory.getLogger(BasketController.class);
