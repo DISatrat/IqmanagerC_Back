@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @Transactional
-@EnableScheduling
+//@EnableScheduling
 public class CalendarServiceImpl implements CalendarService {
 
     private final CalendarDAO calendarDAO;
