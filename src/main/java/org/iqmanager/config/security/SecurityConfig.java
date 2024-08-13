@@ -56,7 +56,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://87.242.107.81:3000","http://localhost:3000")
+                .allowedOrigins("http://176.114.69.184:3000","http://localhost:3000")
                 .allowedMethods("*")
                 .allowCredentials(true)
                 .exposedHeaders("category", "QP", "*");
