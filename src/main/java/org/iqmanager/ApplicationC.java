@@ -31,7 +31,7 @@ public class ApplicationC extends SpringBootServletInitializer{
     private static final Logger logger = LoggerFactory.getLogger(ApplicationC.class);
 
 //    public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
-    public static final String URL_WEB = "http://176.114.69.184:3000";
+    public static final String URL_WEB = "http://176.114.69.235:3000";
 
     public static void main(String[] args) {
         flywayMigrations(URL, USER, PASSWORD);
