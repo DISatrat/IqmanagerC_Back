@@ -146,6 +146,19 @@ public class OrderElementServiceImpl implements OrderElementService {
         List<Calendar> calenders = calendarService.getCalendarByPost(orderElemDTO.getIdPost());
 
         long beginEvent = orderElemDTO.getDateEvent().getEpochSecond();
+//
+//       String paymentType = orderElement.getPost().getPaymentType();
+//
+//        if (Objects.equals(paymentType, "PEOPLE")) {
+//            result = (long) (result * orderElemDTO.getPeople());
+//        }
+//        if (Objects.equals(paymentType, "HOURS")) {
+//            result = (long) (result * orderElemDTO.getDuration());
+//        }
+//        if (Objects.equals(paymentType, "HOURS_AND_FIX")) {
+//            result = (long) (result + result * orderElemDTO.getDuration());
+//        }
+  
 
         for (Calendar calendar : calenders) {
             if (calendar.getBeginDate().getEpochSecond() >= beginEvent && calendar.getEndDate().getEpochSecond() < beginEvent) {

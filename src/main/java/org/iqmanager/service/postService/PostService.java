@@ -2,6 +2,7 @@ package org.iqmanager.service.postService;
 
 import org.iqmanager.dto.PostDTO;
 import org.iqmanager.dto.PostListDTO;
+import org.iqmanager.dto.RequestDTO;
 import org.iqmanager.models.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,4 +34,5 @@ public interface PostService {
     //Поиск
     List<PostListDTO> searchPostsByText(String text);
 
+    void saveOrderRequest(RequestDTO requestDTO);
 }
