@@ -3,15 +3,14 @@ package org.iqmanager.service.postService;
 import lombok.SneakyThrows;
 import org.iqmanager.dto.PostDTO;
 import org.iqmanager.dto.PostListDTO;
+import org.iqmanager.dto.RequestDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
-import org.iqmanager.repository.CalendarDAO;
-import org.iqmanager.repository.CategoryDAO;
-import org.iqmanager.repository.CommentDAO;
-import org.iqmanager.repository.PostDAO;
+import org.iqmanager.repository.*;
 import org.iqmanager.service.calendarService.CalendarService;
 import org.iqmanager.service.categoryService.CategoryService;
 import org.iqmanager.util.LevenshteinDistance;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
@@ -32,14 +31,19 @@ public class PostServiceImpl implements PostService {
     private final CategoryDAO categoryDAO;
     private final CommentDAO commentDAO;
     private final CategoryService categoryService;
+    private final RequestFormDAO requestFormDAO;
+    private final ModelMapper modelMapper;
+
+
 
     @Autowired
-    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService) {
+    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService, RequestFormDAO requestFormDAO, ModelMapper modelMapper) {
         this.postDAO = postDAO;
         this.categoryDAO = categoryDAO;
         this.commentDAO = commentDAO;
         this.categoryService = categoryService;
-
+        this.requestFormDAO = requestFormDAO;
+        this.modelMapper = modelMapper;
     }
 
     @Override
@@ -75,6 +79,13 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostListDTO> searchPostsByText(String text) {
         return postsToDTO(postDAO.findByNameContainingIgnoreCase(text));
+    }
+
+    //1
+    @Override
+    public void saveOrderRequest(RequestDTO requestDTO) {
+        RequestForm requestForm = modelMapper.map(requestDTO, RequestForm.class);
+        requestFormDAO.save(requestForm);
     }
 
     /**

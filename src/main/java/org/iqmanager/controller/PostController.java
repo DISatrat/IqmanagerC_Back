@@ -1,9 +1,6 @@
 package org.iqmanager.controller;
 
-import org.iqmanager.dto.CalculateDTO;
-import org.iqmanager.dto.CalendarDTO;
-import org.iqmanager.dto.OrderElemDTO;
-import org.iqmanager.dto.PostDTO;
+import org.iqmanager.dto.*;
 import org.iqmanager.models.Conditions;
 import org.iqmanager.models.OrderElement;
 import org.iqmanager.models.PerformerData;
@@ -91,8 +88,8 @@ public class PostController {
     public ResponseEntity<Long> calculatePrice(@RequestBody @Validated CalculateDTO calculateDTO) {
         try {
             long finalPrice = 0L;
-            finalPrice += calculateDTO.getPrice() * calculateDTO.getFactor();
-            finalPrice += Arrays.stream(calculateDTO.getExtras()).sum();
+            finalPrice += calculateDTO.getPrice() * calculateDTO.getFactor(); //Умножаем price на factor и добавляем результат к finalPrice.
+            finalPrice += Arrays.stream(calculateDTO.getExtras()).sum();  //Суммируем все extras и добавляем результат к finalPrice.
             return ResponseEntity.ok(finalPrice);
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +140,7 @@ public class PostController {
             return ResponseEntity.ok(CurrencyConverter.convert(from, to, amount));
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.warn("PostController -> convert ERROR");
+            logger.warn("PostController -> convert ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
@@ -151,18 +148,36 @@ public class PostController {
     @GetMapping({"/getPhone"})
     public ResponseEntity<String> getPhone(@RequestParam("postId") long postId, @RequestParam("performerId") long performerId, @RequestParam(value = "returnUrl", required = false, defaultValue = "") String returnUrl, @RequestParam(value = "failUrl", required = false, defaultValue = "") String failUrl, @RequestParam(value = "orderId", required = false, defaultValue = "0") long orderId, @RequestParam(value = "currency", required = false, defaultValue = "RUB") String currency, @RequestParam(value = "sberPay", required = false, defaultValue = "false") boolean sberPay) {
         try {
-            if (this.userDataService.hasUserLoginned()) {
-                Conditions conditions = this.postService.getPost(postId).getConditions();
+            if (userDataService.hasUserLoginned()) {
+                Conditions conditions = postService.getPost(postId).getConditions();
                 if (conditions.isVisible())
-                    return ResponseEntity.ok(this.performerService.getPerformerPhone(performerId));
-                this.userDataService.addPurchasedNumbers(this.postService.getPost(postId));
+                    return ResponseEntity.ok(performerService.getPerformerPhone(performerId));
+                userDataService.addPurchasedNumbers(postService.getPost(postId));
                 return ResponseEntity.ok(this.performerService.getPerformerPhone(performerId));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.warn("PostController -> getPerformerPhone ERROR");
+            logger.warn("PostController -> getPerformerPhone ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    //1
+    @PostMapping("/newOrderRequest")
+    public ResponseEntity<?> newOrderRequest (@RequestBody RequestDTO requestDTO){
+        try {
+            if (userDataService.hasUserLoginned()) {
+
+              postService.saveOrderRequest(requestDTO);
+
+                return ResponseEntity.ok("Successful");
+           }
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.warn("PostController -> getPerformerPhone ERROR");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
 }
