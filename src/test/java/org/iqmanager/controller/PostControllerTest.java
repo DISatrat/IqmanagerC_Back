@@ -26,6 +26,5 @@ public class PostControllerTest {
         mockMvc.perform(get("/api/addF/3"))
                 .andDo(print())
                 .andExpect(status().isOk());
-
     }
 }
