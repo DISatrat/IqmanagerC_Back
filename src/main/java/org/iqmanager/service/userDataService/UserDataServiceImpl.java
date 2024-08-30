@@ -3,14 +3,14 @@ package org.iqmanager.service.userDataService;
 import lombok.SneakyThrows;
 import org.iqmanager.dto.BasketDTO;
 import org.iqmanager.dto.PurchasedNumbersDTO;
-import org.iqmanager.dto.UserAuthDataDTO;
 import org.iqmanager.models.*;
+import org.iqmanager.models.enum_models.CalendarStatus;
+import org.iqmanager.repository.CalendarDAO;
 import org.iqmanager.repository.OrderElementDAO;
 import org.iqmanager.repository.UserDataDAO;
 import org.iqmanager.repository.UserLoginDataDAO;
 import org.iqmanager.service.postService.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
+import java.time.Duration;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -35,15 +35,17 @@ public class UserDataServiceImpl implements UserDataService {
     private final PostService postService;
     private final PasswordEncoder passwordEncoder;
     private final OrderElementDAO orderElementDAO;
+    private final CalendarDAO calendarDAO;
 
     @Autowired
     public UserDataServiceImpl(UserDataDAO userDataDAO, UserLoginDataDAO userLoginDataDAO, PostService postService,
-                               PasswordEncoder passwordEncoder, OrderElementDAO orderElementDAO) {
+                               PasswordEncoder passwordEncoder, OrderElementDAO orderElementDAO, CalendarDAO calendarDAO) {
         this.userLoginDataDAO = userLoginDataDAO;
         this.userDataDAO = userDataDAO;
         this.postService = postService;
         this.passwordEncoder = passwordEncoder;
         this.orderElementDAO = orderElementDAO;
+        this.calendarDAO = calendarDAO;
     }
 
     /** Сохранение данных заказчика */
@@ -119,6 +121,19 @@ public class UserDataServiceImpl implements UserDataService {
     public void addToBasket(OrderElement orderElement) {
         UserData userData = getUser(getLoginnedAccount().getId());
         orderElement.setUserData(userData);
+
+        PerformerData performerData = orderElement.getPost().getPerformer();
+
+        Calendar calendar = new Calendar();
+
+        calendar.setStatus(String.valueOf(CalendarStatus.CONSIDERATION_OF_ORDER));
+        calendar.setPerformer(performerData);
+        calendar.setBeginDate(orderElement.getDateEvent());
+        Duration duration = Duration.ofHours((long) orderElement.getDuration());
+        calendar.setEndDate(orderElement.getDateEvent().plus(duration));
+        calendar.setOrderElement(orderElement);
+        orderElement.setCalendar(calendar);
+        calendarDAO.save(calendar);
         orderElementDAO.save(orderElement);
     }
 

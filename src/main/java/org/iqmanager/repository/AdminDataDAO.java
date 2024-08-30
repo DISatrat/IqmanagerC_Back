@@ -8,4 +8,7 @@ import java.util.List;
 
 @RepositoryRestController
 public interface AdminDataDAO extends JpaRepository<Admin, Long> {
+
+
+
 }

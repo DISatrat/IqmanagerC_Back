@@ -12,5 +12,14 @@ public enum CalendarStatus {
     BUSY,
 
     /**Снижение цены для агента */
-    PRICE_DOWN_FOR_AGENT
+    PRICE_DOWN_FOR_AGENT,
+
+    /** на рассмотрении заказа */
+    CONSIDERATION_OF_ORDER,
+
+    /** частичная занятость */
+    NOT_FULLY_OCCUPIED,
+
+    /** Выходной */
+    DAY_OFF
 }

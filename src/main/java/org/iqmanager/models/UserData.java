@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 @Setter
 @NoArgsConstructor
 public class UserData {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")

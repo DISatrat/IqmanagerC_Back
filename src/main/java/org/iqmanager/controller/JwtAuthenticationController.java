@@ -70,7 +70,7 @@ public class JwtAuthenticationController {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
     /** Выход из аккаунта */
-    @GetMapping("/logout")
+    @PostMapping("/logout")
     public ResponseEntity<String> logout(HttpServletResponse response) {
         try {
             HttpUtils.removeAccessToken(response);

@@ -10,6 +10,7 @@ import java.util.List;
 @RepositoryRestController
 public interface UserDataDAO extends JpaRepository<UserData, Long> {
 
+    UserData findById(long id);
 
     @EntityGraph(value = "user-data-basket-entity-graph")
     UserData getById(long id);

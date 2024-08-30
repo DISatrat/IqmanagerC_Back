@@ -92,6 +92,11 @@ public class OrderElement {
     @JsonIgnore
     private Set<OrderedExtras> orderedExtras;
 
+    @OneToOne
+    @JoinColumn(name = "calendar_id")
+    @JsonIgnore
+    private Calendar calendar;
+
     public void addOrderedExtras(OrderedExtras orderedExtra) {
         orderedExtras.add(orderedExtra);
     }

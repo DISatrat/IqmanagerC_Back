@@ -106,14 +106,14 @@ public class PostController {
         try {
             OrderElement orderElement = orderElemDTO.DTOtoOrder(orderElemDTO);
             orderElement.setDateOrder(Instant.now());
-            orderElement.setPost(this.postService.getPost(orderElemDTO.getIdPost()));
-            orderElement.setOrderedExtras(this.extraService.getExtras(orderElemDTO.getExtra()));
-            orderElement.setOrderPrice(this.orderElementService.calculatePrice(orderElemDTO, orderElement));
+            orderElement.setPost(postService.getPost(orderElemDTO.getIdPost()));
+            orderElement.setOrderedExtras(extraService.getExtras(orderElemDTO.getExtra()));
+            orderElement.setOrderPrice(orderElementService.calculatePrice(orderElemDTO, orderElement));
             if (orderElemDTO.getAddress() != null)
-                orderElement.setPriceDelivery(Math.round(this.orderElementService.calculateDelivery(orderElemDTO.getAddress(), orderElemDTO.getIdPost(), distance)));
+                orderElement.setPriceDelivery(Math.round(orderElementService.calculateDelivery(orderElemDTO.getAddress(), orderElemDTO.getIdPost(), distance)));
             orderElement.setLeftToPay(orderElement.getOrderPrice() + orderElement.getPriceDelivery());
-            if (this.userDataService.hasUserLoginned()) {
-                this.userDataService.addToBasket(orderElement);
+            if (userDataService.hasUserLoginned()) {
+                userDataService.addToBasket(orderElement);
                 return ResponseEntity.ok("Successfully");
             }
             long id = this.userDataService.addToBasketForUnregistered(orderElement);
@@ -128,8 +128,8 @@ public class PostController {
     @GetMapping({"/getCalendar"})
     public ResponseEntity<List<CalendarDTO>> getCalendar(@RequestParam("idPost") long idPost) {
         try {
-            PerformerData performerData = this.postService.getPerformerByPostId(idPost);
-            return ResponseEntity.ok(CalendarDTO.calendarToDTO(this.calendarService.getCalendar(performerData)));
+            PerformerData performerData = postService.getPerformerByPostId(idPost);
+            return ResponseEntity.ok(CalendarDTO.calendarToDTO(calendarService.getCalendar(performerData)));
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.warn("PostController -> getCalendar ERROR");
@@ -152,11 +152,11 @@ public class PostController {
     public ResponseEntity<String> getPhone(@RequestParam("postId") long postId, @RequestParam("performerId") long performerId, @RequestParam(value = "returnUrl", required = false, defaultValue = "") String returnUrl, @RequestParam(value = "failUrl", required = false, defaultValue = "") String failUrl, @RequestParam(value = "orderId", required = false, defaultValue = "0") long orderId, @RequestParam(value = "currency", required = false, defaultValue = "RUB") String currency, @RequestParam(value = "sberPay", required = false, defaultValue = "false") boolean sberPay) {
         try {
             if (this.userDataService.hasUserLoginned()) {
-                Conditions conditions = this.postService.getPost(postId).getConditions();
+                Conditions conditions = postService.getPost(postId).getConditions();
                 if (conditions.isVisible())
-                    return ResponseEntity.ok(this.performerService.getPerformerPhone(performerId));
-                this.userDataService.addPurchasedNumbers(this.postService.getPost(postId));
-                return ResponseEntity.ok(this.performerService.getPerformerPhone(performerId));
+                    return ResponseEntity.ok(performerService.getPerformerPhone(performerId));
+                this.userDataService.addPurchasedNumbers(postService.getPost(postId));
+                return ResponseEntity.ok(performerService.getPerformerPhone(performerId));
             }
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {

@@ -249,6 +249,7 @@ CREATE TABLE `iqmanager`.`performer_data` (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
     `name` VARCHAR(45) NUll,
     `last_name` VARCHAR(45) NULL,
+    `email` VARCHAR(100) NULL,
     `wallet` BIGINT(8) DEFAULT 0,
     `phone` VARCHAR(45) NULL,
     `web` VARCHAR(45) NULL,
@@ -264,7 +265,11 @@ CREATE TABLE `iqmanager`.`calendar` (
     `change_price` TINYINT NULL,
     `used`         INTEGER(5) NULL,
     `status` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`id`));
+    `order_id` BIGINT(19) NULL,
+    PRIMARY KEY (`id`),
+    FOREIGN KEY (`order_id`) REFERENCES `order_element`(`id`)
+);
+
 
 #Данные входа админа
 CREATE TABLE `iqmanager`.`login_admin_data`(
@@ -454,6 +459,14 @@ ALTER TABLE payment
     ADD COLUMN `order_element_id` BIGINT(19) NOT NULL;
 ALTER TABLE payment
     ADD CONSTRAINT fk_payment_order_id FOREIGN KEY (order_element_id) REFERENCES `order_element` (id);
+
+ALTER TABLE `iqmanager`.`order_element`
+    ADD COLUMN `calendar_id` BIGINT(19) NULL;
+
+-- Устанавливаем внешний ключ, связывающий calendar_id с id таблицы calendar
+ALTER TABLE `iqmanager`.`order_element`
+    ADD CONSTRAINT `fk_order_element_calendar`
+        FOREIGN KEY (`calendar_id`) REFERENCES `calendar`(`id`);
 
 
 

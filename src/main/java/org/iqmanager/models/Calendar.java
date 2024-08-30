@@ -47,4 +47,9 @@ public class Calendar {
     @JoinColumn(name = "performer_id")
     @JsonIgnore
     PerformerData performer;
+
+    @OneToOne
+    @JoinColumn(name = "order_id")
+    @JsonIgnore
+    private OrderElement orderElement;
 }
