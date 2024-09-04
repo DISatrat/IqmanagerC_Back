@@ -99,26 +99,38 @@ public class CategoryServiceImpl implements CategoryService {
     public String[][] getHistory(long idParent, String language) {
         int i = 0;
         String[][] preHistory = new String[20][2];
-        while (true) {
-            if (idParent != 0) {
-                Category category = find(idParent);
-                Optional<String> name = category.getCategoryNames().stream().filter(x -> Objects.equals(x.getLanguage(), language)).map(CategoryName::getName).findFirst();
-                preHistory[i][0] = name.orElseGet(() -> category.getCategoryNames().stream().filter(x -> Objects.equals(x.getLanguage(), "en")).map(CategoryName::getName).findFirst().get());
-                preHistory[i][1] = String.valueOf(category.getId());
-                idParent = category.getIdParent();
-                i++;
-            } else {
-                break;
+
+        while (idParent != 0) {
+            Category category = find(idParent);
+            if (category == null) {
+                throw new NoSuchElementException("Category with parent ID " + idParent + " not found.");
             }
-        }
-        String[][] history = new String[i + 1][2];
-        for (int n = 0; n < i + 1; n++) {
-            for (int m = 0; m < 2; m++) {
-                history[n][m] = preHistory[n][m];
-            }
+
+            Optional<String> nameOptional = category.getCategoryNames().stream()
+                    .filter(x -> Objects.equals(x.getLanguage(), language))
+                    .map(CategoryName::getName)
+                    .findFirst();
+
+            String categoryName = nameOptional.orElseGet(() ->
+                    category.getCategoryNames().stream()
+                            .filter(x -> Objects.equals(x.getLanguage(), "ru"))
+                            .map(CategoryName::getName)
+                            .findFirst()
+                            .orElseThrow(() -> new NoSuchElementException("No category name found for category ID " + category.getId()))
+            );
+
+            preHistory[i][0] = categoryName;
+            preHistory[i][1] = String.valueOf(category.getId());
+            idParent = category.getIdParent();
+            i++;
         }
 
+        String[][] history = new String[i + 1][2];
+        for (int n = 0; n <= i; n++) {
+            System.arraycopy(preHistory[n], 0, history[n], 0, 2);
+        }
 
         return history;
     }
+
 }

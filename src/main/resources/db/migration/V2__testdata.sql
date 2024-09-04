@@ -62,7 +62,6 @@ INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Weddin
 
 
 
-
 INSERT INTO iqmanager.photo_report (name, path) VALUES ('test1', 'post0.jpg');
 INSERT INTO iqmanager.photo_report (name, path) VALUES ('test2', 'post1.jpg');
 INSERT INTO iqmanager.photo_report (name, path) VALUES ('test3', 'post2.jpg');
@@ -92,7 +91,11 @@ INSERT INTO iqmanager.category ( id_parent, final, `image`) VALUES ('1', '1', 'i
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Свадебный распорядитель', 'ru', 16);
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Wedding Host', 'en', 16);
 
+INSERT INTO iqmanager.category ( id_parent, final, hidden, `image`) VALUES ('1', '1','1', 'im');
+INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Ведущий', 'ru', 17);
 
+INSERT INTO iqmanager.category ( id_parent, final, hidden, `image`) VALUES ('0', '1','0', 'kom');
+INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Комик', 'ru', 18);
 
 INSERT iqmanager.performer_login_data(login, password) VALUES ('perf1', 'perf');
 INSERT INTO iqmanager.performer_data(name, last_name, phone, performer_login_data_id) VALUES ('Service', 'Service', '+79998887766', 1);
@@ -12580,6 +12583,9 @@ INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (1,13)
 INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (1,14);
 INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (1,15);
 INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (1,16);
+INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (17,18);
+INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (17,16);
+INSERT INTO iqmanager.parent_x_child_category(parent_id, child_id) VALUES (1,18);
 
 UPDATE calendar
 SET used = 0;

@@ -56,16 +56,16 @@ public class PostController {
         this.performerService = performerService;
     }
 
-    @GetMapping({"/post/{id}"})
+    @GetMapping("/post/{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable("id") long id, @RequestParam(value = "id_category", required = false, defaultValue = "-1") long idCategory, @RequestParam(value = "lg", required = false, defaultValue = "en") String language) {
         try {
-            PostDTO post = this.postService.getPostDTO(id, idCategory, language);
+            PostDTO post = postService.getPostDTO(id, idCategory, language);
             post.setViews(post.getViews() + 1L);
-            this.postService.updatePostViews(id, post.getViews());
+            postService.updatePostViews(id, post.getViews());
             return ResponseEntity.ok(post);
         } catch (Exception e) {
             e.printStackTrace();
-            this.logger.warn("PostController -> getPost ERROR");
+            logger.warn("PostController -> getPost ERROR");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

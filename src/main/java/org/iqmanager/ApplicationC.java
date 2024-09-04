@@ -24,9 +24,9 @@ public class ApplicationC extends SpringBootServletInitializer {
 //    private static final String USER = "root";
     private static final String USER = "root";
 
-    private static final String PASSWORD = "root";
-    //Laptop
 //    private static final String PASSWORD = "";
+    //Laptop
+    private static final String PASSWORD = "root";
     private static final Logger logger = LoggerFactory.getLogger(ApplicationC.class);
 
         public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
