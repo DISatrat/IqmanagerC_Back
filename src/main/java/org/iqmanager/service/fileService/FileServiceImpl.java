@@ -2,7 +2,7 @@ package org.iqmanager.service.fileService;
 
 import lombok.SneakyThrows;
 import org.apache.commons.codec.digest.DigestUtils;
-import org.springframework.beans.factory.annotation.Value;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -22,6 +22,9 @@ public class FileServiceImpl implements FileService {
     public String upload(MultipartFile multipartFile, String pathDirectory) {
         if (multipartFile != null && !multipartFile.isEmpty()) {
             String key = generateKey(multipartFile.getOriginalFilename());
+
+            key = key + "." + FilenameUtils.getExtension(multipartFile.getOriginalFilename());
+
             Path path = Paths.get(pathDirectory, key);
             Path file = Files.createFile(path);
             try (FileOutputStream stream = new FileOutputStream(file.toString())) {
