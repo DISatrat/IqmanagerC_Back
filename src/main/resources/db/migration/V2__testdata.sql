@@ -69,11 +69,6 @@ INSERT INTO iqmanager.photo_report (name, path) VALUES ('test4', 'post3.jpg');
 INSERT INTO iqmanager.photo_report (name, path) VALUES ('test5', 'post4.jpg');
 INSERT INTO iqmanager.photo_report (name, path) VALUES ('test6', 'image-1667.png');
 
-INSERT INTO iqmanager.poster (name, path) VALUES ('test1', 'afisha1.jpg');
-INSERT INTO iqmanager.poster (name, path) VALUES ('test2', 'afisha2.jpg');
-INSERT INTO iqmanager.poster (name, path) VALUES ('test3', 'afisha3.jpg');
-INSERT INTO iqmanager.poster (name, path) VALUES ('test4', 'afisha4.jpg');
-
 
 
 

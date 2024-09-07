@@ -1,7 +1,7 @@
 package org.iqmanager.controller;
 
 import org.iqmanager.models.PhotoReport;
-import org.iqmanager.models.Poster;
+import org.iqmanager.models.Banner;
 import org.iqmanager.service.footerService.FooterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ public class FooterController {
     }
 
     @GetMapping("/poster")
-    public ResponseEntity<List<Poster>> getPoster() {
+    public ResponseEntity<List<Banner>> getPoster() {
         try {
             return ResponseEntity.ok(footerService.getPosters());
         } catch (Exception e) {

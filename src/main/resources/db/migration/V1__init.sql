@@ -428,11 +428,18 @@ CREATE TABLE photo_report(
     `path` VARCHAR(100) NOT NULL
 );
 
-CREATE TABLE poster(
+CREATE TABLE banner (
     `id` BIGINT(19) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `name` VARCHAR(100) NOT NULL,
-    `path` VARCHAR(100) NOT NULL
+    `title`  VARCHAR(255),
+    `link_presence` BOOLEAN,
+    `link_address` VARCHAR(255),
+    `link_inscription` VARCHAR(255),
+    `serial_number` INT NOT NULL,
+    `banner_visible` BOOLEAN NOT NULL,
+    `banner_background` VARCHAR(255)
 );
+
+
 
 ALTER TABLE order_extra ADD COLUMN `order_element_id` BIGINT(19) NULL;
 ALTER TABLE order_extra ADD CONSTRAINT fk_order_extra_order_element FOREIGN KEY (order_element_id) REFERENCES `order_element`(id);

@@ -1,7 +1,7 @@
 package org.iqmanager.service.footerService;
 
+import org.iqmanager.models.Banner;
 import org.iqmanager.models.PhotoReport;
-import org.iqmanager.models.Poster;
 import org.iqmanager.repository.PhotoReportDAO;
 import org.iqmanager.repository.PosterDAO;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class FooterServiceImpl implements FooterService {
     }
 
     @Override
-    public List<Poster> getPosters() {
+    public List<Banner> getPosters() {
         return posterDAO.findAll();
     }
 
