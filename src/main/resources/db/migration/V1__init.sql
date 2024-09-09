@@ -444,7 +444,6 @@ CREATE TABLE promo (
     `name`  VARCHAR(255),
     `status` VARCHAR(255) NOT NULL,
     `date` DATETIME,
-    `image` VARCHAR(255),
     `rules` VARCHAR(255)
 );
 
