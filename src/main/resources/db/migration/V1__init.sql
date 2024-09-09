@@ -439,6 +439,21 @@ CREATE TABLE banner (
     `banner_background` VARCHAR(255)
 );
 
+CREATE TABLE promo (
+    `id` BIGINT(19) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `name`  VARCHAR(255),
+    `status` VARCHAR(255) NOT NULL,
+    `date` DATETIME,
+    `rules` VARCHAR(255)
+);
+
+CREATE TABLE images_x_promo (
+    `id` BIGINT(19) NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    `path` VARCHAR(60) NOT NULL,
+    `id_promo` BIGINT(19) NOT NULL,
+    CONSTRAINT fk_img_promo FOREIGN KEY (id_promo)  REFERENCES promo (id)
+);
+
 
 
 ALTER TABLE order_extra ADD COLUMN `order_element_id` BIGINT(19) NULL;
