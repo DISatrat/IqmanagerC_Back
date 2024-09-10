@@ -21,10 +21,9 @@ public class ApplicationC extends SpringBootServletInitializer {
 
     private static final String URL = "jdbc:mysql://localhost:3306/iqmanager";
     //    private static final String URL = "jdbc:mysql://localhost:3306/iqmanager";
+    private static final String USER = "root123";
 //    private static final String USER = "root";
-    private static final String USER = "root";
-
-    private static final String PASSWORD = "";
+    private static final String PASSWORD = "rOor!23$";
     //Laptop
 //    private static final String PASSWORD = "root";
     private static final Logger logger = LoggerFactory.getLogger(ApplicationC.class);
