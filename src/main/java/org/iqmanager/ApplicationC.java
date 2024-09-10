@@ -20,7 +20,7 @@ import javax.servlet.MultipartConfigElement;
 public class ApplicationC extends SpringBootServletInitializer {
 
 //    private static final String URL = "jdbc:mysql://localhost:3306/iqmanager";
-        private static final String URL = "jdbc:mysql://79.174.88.69:17514/iqmanger";
+        private static final String URL = "jdbc:mysql://79.174.88.69:15853/iqmanager";
     private static final String USER = "root123";
 //    private static final String USER = "root";
     private static final String PASSWORD = "rOor!23$";
