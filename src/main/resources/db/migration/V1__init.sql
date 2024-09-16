@@ -462,7 +462,7 @@ ALTER TABLE order_extra ADD CONSTRAINT fk_order_extra_order_element FOREIGN KEY 
 ALTER TABLE performer_data ADD COLUMN  `contract_id` BIGINT(19) NULL;
 ALTER TABLE performer_data ADD CONSTRAINT fk_contract_id FOREIGN KEY (contract_id) REFERENCES `contract`(id);
 
-ALTER TABLE rates_and_services ADD COLUMN `extra_id` BIGINT(19) NOT NULL;
+ALTER TABLE rates_and_services ADD COLUMN `extra_id` BIGINT(19) NULL;
 ALTER TABLE rates_and_services ADD CONSTRAINT fk_extra_rates_and_services FOREIGN KEY (extra_id) REFERENCES `extra`(id);
 
 ALTER TABLE performer_data ADD COLUMN `performer_login_data_id` BIGINT(19) NOT NULL;

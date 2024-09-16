@@ -42,17 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     public void configureGlobalSecurity(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
-
-//    @Override
-//    public void addCorsMappings(CorsRegistry registry) {
-//        registry.addMapping("/**")
-//                .allowedOrigins("http://localhost:3000")
-//                .allowedMethods("*")
-//                .allowCredentials(true)
-//                .exposedHeaders("category")
-//                .exposedHeaders("category","QP");
-//    }
-
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")

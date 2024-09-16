@@ -1,4 +1,4 @@
-package org.iqmanager.service.requestFormService;
+package org.iqmanager.service.ratesService.requestFormService;
 
 import org.iqmanager.models.RequestForm;
 import org.springframework.stereotype.Service;

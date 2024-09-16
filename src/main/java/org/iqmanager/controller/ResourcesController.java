@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.InputStream;
+
 import static org.iqmanager.ApplicationC.URL_WEB;
 
 @Validated
@@ -34,9 +36,12 @@ public class ResourcesController {
     }
 
     @GetMapping("/downloadImage")
-    public ResponseEntity<byte[]> downloadImage(@RequestParam("key") String key){
+    public ResponseEntity<byte[]> downloadImage(@RequestParam("key") String key) {
         try {
-            return ResponseEntity.ok(fileService.download(key, imageDirectoryPath).getInputStream().readAllBytes());
+            try (InputStream inputStream = fileService.download(key, imageDirectoryPath).getInputStream()) {
+                byte[] imageBytes = inputStream.readAllBytes();
+                return ResponseEntity.ok(imageBytes);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             logger.warn("Performer -> ResourcesController -> downloadImage ERROR");
