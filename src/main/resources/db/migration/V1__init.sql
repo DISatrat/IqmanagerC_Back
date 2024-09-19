@@ -108,6 +108,7 @@ CREATE TABLE `iqmanager`.`post` (
     `like` BOOLEAN DEFAULT FALSE,
     `stars` TINYINT DEFAULT 0,
     `status` BOOLEAN DEFAULT FALSE,
+    `blocked` BOOLEAN DEFAULT FALSE,
     `post_type` VARCHAR(50) NOT NULL,
     `payment_type` VARCHAR(50) NOT NULL,
     `delivery_type` VARCHAR(100) NOT NULL,
@@ -155,6 +156,7 @@ CREATE TABLE `iqmanager`.`user_data` (
     `country` VARCHAR(80) NULL,
     `region` VARCHAR(80) NULL,
     `city` VARCHAR(80) NULL,
+    `blocked` BOOLEAN DEFAULT FALSE,
     `user_login_id` BIGINT(19) NOT NULL,
 
 --     НОВОЕ
@@ -254,6 +256,7 @@ CREATE TABLE `iqmanager`.`performer_data` (
     `phone` VARCHAR(45) NULL,
     `web` VARCHAR(45) NULL,
     `master` BIGINT(6) DEFAULT 0,
+    `blocked` BOOLEAN DEFAULT FALSE,
     PRIMARY KEY (`id`)
 );
 
