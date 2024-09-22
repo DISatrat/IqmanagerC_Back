@@ -422,7 +422,9 @@ CREATE TABLE request(
     `phone` VARCHAR(20) NOT NULL,
     `comment` LONGTEXT NULL,
     `date_order` DATETIME NOT NULL,
-    `image` VARCHAR(60)
+    `image` VARCHAR(60),
+    `control` BIGINT(19),
+    CONSTRAINT fk_req_control FOREIGN KEY (control) REFERENCES admin_data(id)
 );
 
 CREATE TABLE photo_report(
