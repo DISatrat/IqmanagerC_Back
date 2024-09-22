@@ -2,6 +2,17 @@ INSERT INTO iqmanager.category (id_parent, final, `image`) VALUES ('0', '0', 'sv
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Свадьба', 'ru', 1);
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Wedding', 'en', 1);
 
+INSERT INTO iqmanager.admin_role(role) values ('SUPER_ADMIN');
+INSERT INTO iqmanager.admin_role(role) values ('SEO');
+INSERT INTO iqmanager.admin_role(role) values ('MODERATOR');
+INSERT INTO iqmanager.admin_role(role) values ('ACCOUNTANT');
+INSERT INTO iqmanager.admin_role(role) values ('CATALOG');
+INSERT INTO iqmanager.admin_role(role) values ('CONTRACT');
+INSERT INTO iqmanager.admin_role(role) values ('ORDERS');
+INSERT INTO iqmanager.admin_role(role) values ('PATTERN');
+INSERT INTO iqmanager.admin_role(role) values ('CLIENT');
+INSERT INTO iqmanager.admin_role(role) values ('APPLICATION');
+
 INSERT INTO iqmanager.category (id_parent, final, `image`) VALUES ('0', '1', 'child.png');
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Детский праздник', 'ru', 2);
 INSERT INTO iqmanager.category_name(name, language, id_category) VALUES ('Children holiday', 'en', 2);
