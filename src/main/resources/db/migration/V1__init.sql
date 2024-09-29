@@ -107,7 +107,7 @@ CREATE TABLE `iqmanager`.`post` (
     `views` BIGINT(19) DEFAULT 0,
     `like` BOOLEAN DEFAULT FALSE,
     `stars` TINYINT DEFAULT 0,
-    `status` VARCHAR(50) DEFAULT 'ON_MODERATION',
+    `status` VARCHAR(50) DEFAULT 'PUBLISHED',
     `blocked` BOOLEAN DEFAULT FALSE,
     `post_type` VARCHAR(50) NOT NULL,
     `payment_type` VARCHAR(50) NOT NULL,

@@ -4,7 +4,7 @@ public enum PostStatus {
     /** На модерации */
     ON_MODERATION,
     /** Опубликовано */
-    PUBLICHED,
+    PUBLISHED,
     /** Удален */
     DELETED,
     /** Скрыт */
