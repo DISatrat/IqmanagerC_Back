@@ -11,6 +11,7 @@ import org.iqmanager.models.resources.PDF;
 import org.iqmanager.models.resources.Video;
 import org.springframework.core.io.ByteArrayResource;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -50,7 +51,7 @@ public class PostDTO {
     private boolean like;
 
     /** Статус */
-    private boolean status;
+    private String status;
 
     /** Адресс */
     private String address;
@@ -108,6 +109,10 @@ public class PostDTO {
 
     private String[][] history;
 
+    private Instant dateCreation;
+
+    private Instant dateEdit;
+
     public static PostDTO postToDto(Post post) {
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
@@ -119,7 +124,7 @@ public class PostDTO {
         postDTO.setTitle(post.getTitle());
         postDTO.setViews(post.getViews());
         postDTO.setLike(post.isLike());
-        postDTO.setStatus(post.isStatus());
+        postDTO.setStatus(post.getStatus().name());
         postDTO.setStars(post.getStars());
         postDTO.setAddress(post.getAddress());
         postDTO.setPostType(post.getPostType());
