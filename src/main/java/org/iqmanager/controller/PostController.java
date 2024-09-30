@@ -55,7 +55,7 @@ public class PostController {
         this.calendarService = calendarService;
         this.performerService = performerService;
     }
-
+//проверка
     @GetMapping("/post/{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable("id") long id, @RequestParam(value = "id_category", required = false, defaultValue = "-1") long idCategory, @RequestParam(value = "lg", required = false, defaultValue = "en") String language) {
         try {
@@ -168,7 +168,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    //1
+
     @PostMapping("/newOrderRequest")
     public ResponseEntity<?> newOrderRequest (@RequestBody RequestDTO requestDTO){
         try {
