@@ -6,6 +6,7 @@ import org.iqmanager.dto.PostListDTO;
 import org.iqmanager.dto.RequestDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
+import org.iqmanager.models.enum_models.PostStatus;
 import org.iqmanager.repository.*;
 import org.iqmanager.service.calendarService.CalendarService;
 import org.iqmanager.service.categoryService.CategoryService;
@@ -162,7 +163,10 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostListDTO> getPostsPaginationOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        return postsToDTO(postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceAsc(category, country, region, minStars, maxStars, minPrice, maxPrice, pageable));
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceAsc(
+                category, country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     /**
