@@ -174,7 +174,9 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostListDTO> getPostsPaginationOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        return postsToDTO(postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceDesc(category, country, region, minStars, maxStars, minPrice, maxPrice, pageable));
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceDesc(category,
+                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     /**
@@ -182,7 +184,9 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostListDTO> getPostsPaginationOrderByStarsAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        return postsToDTO(postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsAsc(category, country, region, minStars, maxStars, minPrice, maxPrice, pageable));
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsAsc(category,
+                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     /**
@@ -190,7 +194,9 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     public List<PostListDTO> getPostsPaginationOrderByStarsDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        return postsToDTO(postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsDesc(category, country, region, minStars, maxStars, minPrice, maxPrice, pageable));
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsDesc(category,
+                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     /**

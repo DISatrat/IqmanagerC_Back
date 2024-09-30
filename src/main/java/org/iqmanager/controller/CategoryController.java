@@ -156,7 +156,6 @@ public class CategoryController {
     /**
      * Получаем список объявлений по индексу категории
      */
-    //проверка
     @GetMapping("/posts")
     public ResponseEntity<List<PostListDTO>> getPosts(HttpServletResponse response,
                                                       @RequestParam(value = "id") long idCategory, // id категории
