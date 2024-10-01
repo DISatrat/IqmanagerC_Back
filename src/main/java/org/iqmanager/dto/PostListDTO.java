@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.iqmanager.models.Comment;
 import org.iqmanager.models.Post;
+import org.iqmanager.models.enum_models.PostStatus;
 
 
 import javax.transaction.Transactional;
@@ -52,6 +53,8 @@ public class PostListDTO {
     private long price;
 
     private String currency;
+
+    private PostStatus status;
 
     public PostListDTO(long id, String name, String title, String image,String blurImage, String address, long views, boolean like, int stars, long price, String currency) {
         this.id = id;

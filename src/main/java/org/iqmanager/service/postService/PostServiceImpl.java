@@ -49,7 +49,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<PostListDTO> getListPosts(Category category) {
-        return postsToDTO(postDAO.findByCategories(category));
+        List<Post> postListDTOS = postDAO.findByCategories(category);
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     @Override
@@ -79,7 +80,8 @@ public class PostServiceImpl implements PostService {
     // реализация поиска
     @Override
     public List<PostListDTO> searchPostsByText(String text) {
-        return postsToDTO(postDAO.findByNameContainingIgnoreCase(text));
+        List<Post> postListDTOS = postDAO.findByNameContainingIgnoreCase(text);
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     //1
@@ -95,7 +97,9 @@ public class PostServiceImpl implements PostService {
     @Override
     @Cacheable("quantityPosts")
     public long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars) {
-        return postDAO.getAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceInRublesAsc(categoryDAO.getOne(id), country, region, minStars, maxStars, minPrice, maxPrice).size();
+        Category category = categoryDAO.getOne(id);
+        return postDAO.countByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualAndStatus(
+                category, country, region, minStars, maxStars, minPrice, maxPrice, PostStatus.PUBLISHED);
     }
 
     @SneakyThrows
@@ -118,7 +122,8 @@ public class PostServiceImpl implements PostService {
     @Cacheable("getPosts")
     public List<PostListDTO> getPostsPagination(long id, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, int page, int quantity) {
 
-        return postsToDTO(postDAO.findAllByCategoriesAndCountryAndRegion(categoryDAO.getOne(id), country, region, minStars, maxStars, minPrice, maxPrice, PageRequest.of(page, quantity)));
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegion(categoryDAO.getOne(id), country, region, minStars, maxStars, minPrice, maxPrice, PageRequest.of(page, quantity));
+        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
     @Override
@@ -131,7 +136,7 @@ public class PostServiceImpl implements PostService {
     @Override
 //    @Cacheable("allPostIds")
     public ArrayList<Long> getAllPostIds() {
-        ArrayList<Long> data = postsToDTO(postDAO.findAll()).stream().map(i -> i.getId()).collect(Collectors.toCollection(ArrayList::new));
+        ArrayList<Long> data = postsToDTO(postDAO.findAll()).stream().filter(post ->PostStatus.PUBLISHED.equals(post.getStatus())).map(PostListDTO::getId).collect(Collectors.toCollection(ArrayList::new));
         return data;
     }
 
@@ -142,7 +147,7 @@ public class PostServiceImpl implements PostService {
     public List<PostListDTO> getPostsForSearch(String request) {
         List<Post> posts = postDAO.findAll();
         LevenshteinDistance levenshteinDistance = new LevenshteinDistance();
-        levenshteinDistance.setData(posts.stream().map(Post::getName).collect(Collectors.toList()));
+        levenshteinDistance.setData(posts.stream().filter(post -> PostStatus.PUBLISHED.equals(post.getStatus())).map(Post::getName).collect(Collectors.toList()));
         System.out.println(levenshteinDistance.search(request).size());
         System.out.println(levenshteinDistance.search(request));
 
