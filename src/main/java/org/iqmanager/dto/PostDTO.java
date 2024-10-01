@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.Hibernate;
 import org.iqmanager.models.*;
+import org.iqmanager.models.enum_models.PostStatus;
 import org.iqmanager.models.resources.Images;
 import org.iqmanager.models.resources.PDF;
 import org.iqmanager.models.resources.Video;
@@ -51,7 +52,7 @@ public class PostDTO {
     private boolean like;
 
     /** Статус */
-    private String status;
+    private PostStatus status;
 
     /** Адресс */
     private String address;
@@ -124,7 +125,7 @@ public class PostDTO {
         postDTO.setTitle(post.getTitle());
         postDTO.setViews(post.getViews());
         postDTO.setLike(post.isLike());
-        postDTO.setStatus(post.getStatus().name());
+        postDTO.setStatus(post.getStatus());
         postDTO.setStars(post.getStars());
         postDTO.setAddress(post.getAddress());
         postDTO.setPostType(post.getPostType());
