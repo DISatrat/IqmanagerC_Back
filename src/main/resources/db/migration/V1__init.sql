@@ -107,7 +107,7 @@ CREATE TABLE `iqmanager`.`post` (
     `views` BIGINT(19) DEFAULT 0,
     `like` BOOLEAN DEFAULT FALSE,
     `stars` TINYINT DEFAULT 0,
-    `status` BOOLEAN DEFAULT FALSE,
+    `status` VARCHAR(50) DEFAULT 'PUBLISHED',
     `blocked` BOOLEAN DEFAULT FALSE,
     `post_type` VARCHAR(50) NOT NULL,
     `payment_type` VARCHAR(50) NOT NULL,
@@ -117,6 +117,8 @@ CREATE TABLE `iqmanager`.`post` (
     `region` VARCHAR(50) NOT NULL,
     `address` VARCHAR(100) NOT NULL,
     `city` VARCHAR(50) NOT NULL,
+    `date_creation` DATETIME NULL,
+    `date_edit` DATETIME NULL,
     PRIMARY KEY (`id`)
 );
 

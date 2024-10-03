@@ -168,7 +168,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    //1
+
     @PostMapping("/newOrderRequest")
     public ResponseEntity<?> newOrderRequest (@RequestBody RequestDTO requestDTO){
         try {

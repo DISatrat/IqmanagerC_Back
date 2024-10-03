@@ -2,6 +2,7 @@ package org.iqmanager.repository;
 
 import org.iqmanager.models.Category;
 import org.iqmanager.models.Post;
+import org.iqmanager.models.enum_models.PostStatus;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -14,16 +15,17 @@ import java.util.Set;
 @RepositoryRestController
 public interface PostDAO extends JpaRepository<Post, Long> {
 
-    List<Post> getAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceInRublesAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice);
+    long countByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualAndStatus(
+            Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, PostStatus status);
 
     List<Post> findAllByCategoriesAndCountryAndRegion(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);
 
     // возрастание цены
-//    findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceInRublesAsc
+
     List<Post> findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable); //По возрастанию цены
 
     //убывание цены
-    //findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceInRublesDesc
+
     List<Post> findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);//По убыванию цены
 
     // возрастание оценки

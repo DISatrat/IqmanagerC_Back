@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.iqmanager.models.enum_models.PostStatus;
 import org.iqmanager.models.resources.Images;
 import org.iqmanager.models.resources.PDF;
 import org.iqmanager.models.resources.Video;
@@ -83,9 +84,10 @@ public class Post {
     @Column(name = "stars")
     private byte stars;
 
-    /** Статус объявления - на модерации или одобрено */
+    /** Статус объявления */
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private boolean status;
+    private PostStatus status;
 
     /** Адрес исполнителя */
     @Column(name = "address")
@@ -118,6 +120,14 @@ public class Post {
     /** Город размещения */
     @Column(name = "city")
     private String city;
+
+    /** Дата создания */
+    @Column(name = "date_creation")
+    private Instant dateCreation;
+
+    /** Дата последнего изменения */
+    @Column(name = "date_edit")
+    private Instant dateEdit;
 
     /** id исполнителя */
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
@@ -166,13 +176,14 @@ public class Post {
 
 
 
-    public Post(String name, long price, String title, String postType, String paymentType, String deliveryType) {
+    public Post(String name, long price, String title, String postType, String paymentType, String deliveryType, PostStatus status) {
         this.name = name;
         this.price = price;
         this.title = title;
         this.postType = postType;
         this.paymentType = paymentType;
         this.deliveryType = deliveryType;
+        this.status = status;
     }
 
 
@@ -210,7 +221,6 @@ public class Post {
         if (views != post.views) return false;
         if (like != post.like) return false;
         if (stars != post.stars) return false;
-        if (status != post.status) return false;
         if (prepayment != post.prepayment) return false;
         if (!Objects.equals(name, post.name)) return false;
         if (!Objects.equals(imageKey, post.imageKey)) return false;
@@ -221,7 +231,8 @@ public class Post {
         if (!Objects.equals(deliveryType, post.deliveryType)) return false;
         if (!Objects.equals(country, post.country)) return false;
         if (!Objects.equals(region, post.region)) return false;
-        return Objects.equals(city, post.city);
+        if (!Objects.equals(city, post.city)) return false;
+        return status == post.status;
     }
 
     @Override
@@ -236,7 +247,7 @@ public class Post {
         result = 31 * result + (int) (views ^ (views >>> 32));
         result = 31 * result + (like ? 1 : 0);
         result = 31 * result + (int) stars;
-        result = 31 * result + (status ? 1 : 0);
+        result = 31 * result + (status != null ? status.hashCode() : 0);
         result = 31 * result + (address != null ? address.hashCode() : 0);
         result = 31 * result + (postType != null ? postType.hashCode() : 0);
         result = 31 * result + (paymentType != null ? paymentType.hashCode() : 0);

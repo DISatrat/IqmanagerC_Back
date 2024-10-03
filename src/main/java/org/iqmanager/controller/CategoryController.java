@@ -73,7 +73,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+    //проверка
     @GetMapping("/postIdsByCategory/{catId}")
     public ResponseEntity<ArrayList<Long>> getAllPosts(@PathVariable("catId") long categoryId) {
         try {
@@ -84,7 +84,7 @@ public class CategoryController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
+    //проверка
     @GetMapping("/allPostIds")
     public ResponseEntity<ArrayList<Long>> getAllPostIds() {
         try {
@@ -131,7 +131,7 @@ public class CategoryController {
         }
     }
 
-
+    //проверка
     @GetMapping("/getAllPost")
     public ResponseEntity<List<PostListDTO>> getAllPosts(HttpServletResponse response,
                                                          @RequestParam(value = "id") long idCategory,
@@ -206,6 +206,7 @@ public class CategoryController {
     /**
      * Количество постов
      */
+    //проверка
     @GetMapping("/getQuantityPosts")
     public ResponseEntity<Long> getQuantityPage(@RequestParam(value = "id") long idCategory, // id категории
                                                 @RequestParam(value = "c") String country, // Страна
