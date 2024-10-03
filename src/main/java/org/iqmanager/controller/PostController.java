@@ -55,14 +55,11 @@ public class PostController {
         this.calendarService = calendarService;
         this.performerService = performerService;
     }
-//проверка
+
     @GetMapping("/post/{id}")
     public ResponseEntity<PostDTO> getPost(@PathVariable("id") long id, @RequestParam(value = "id_category", required = false, defaultValue = "-1") long idCategory, @RequestParam(value = "lg", required = false, defaultValue = "en") String language) {
         try {
             PostDTO post = postService.getPostDTO(id, idCategory, language);
-            if (!"PUBLISHED".equals(post.getStatus())) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-            }
             post.setViews(post.getViews() + 1L);
             postService.updatePostViews(id, post.getViews());
             return ResponseEntity.ok(post);
