@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -34,7 +33,6 @@ public class PostServiceImpl implements PostService {
     private final CategoryService categoryService;
     private final RequestFormDAO requestFormDAO;
     private final ModelMapper modelMapper;
-
 
 
     @Autowired
@@ -70,7 +68,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public void addNewFeedback(long postId, String username, String feedbackText, byte stars) {
         Post post = postDAO.findPostById(postId);
-        Comment newComment = new Comment(username,feedbackText,stars);
+        Comment newComment = new Comment(username, feedbackText, stars);
         newComment.setPost(post);
         newComment.setDate(Instant.now());
         post.getComments().add(newComment);
@@ -95,7 +93,7 @@ public class PostServiceImpl implements PostService {
      * Получить количество постов по условию
      */
     @Override
-    @Cacheable("quantityPosts")
+//    @Cacheable("quantityPosts")
     public long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars) {
         Category category = categoryDAO.getOne(id);
         return postDAO.countByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualAndStatus(
