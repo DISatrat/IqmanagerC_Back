@@ -8,6 +8,7 @@ import org.iqmanager.dto.OrderElemDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
 import org.iqmanager.models.enum_models.DeliveryType;
+import org.iqmanager.repository.CalendarDAO;
 import org.iqmanager.repository.OrderElementDAO;
 import org.iqmanager.scheduler.AutoRejectScheduler;
 import org.iqmanager.service.calendarService.CalendarService;
@@ -47,10 +48,13 @@ public class OrderElementServiceImpl implements OrderElementService {
     private final PostService postService;
     private final SchedulerService schedulerService;
     private final CalendarService calendarService;
+    private final CalendarDAO calendarDAO;
+
+
 
     public OrderElementServiceImpl(RatesService ratesService, UserDataService userDataService,
                                    OrderElementDAO orderElementDAO, OrderedExtraService orderedExtraService,
-                                   PostService postService, SchedulerService schedulerService, CalendarService calendarService) {
+                                   PostService postService, SchedulerService schedulerService, CalendarService calendarService, CalendarDAO calendarDAO) {
         this.ratesService = ratesService;
         this.userDataService = userDataService;
         this.orderElementDAO = orderElementDAO;
@@ -58,6 +62,7 @@ public class OrderElementServiceImpl implements OrderElementService {
         this.postService = postService;
         this.schedulerService = schedulerService;
         this.calendarService = calendarService;
+        this.calendarDAO = calendarDAO;
     }
 
     //todo планировщик и смс
@@ -71,8 +76,13 @@ public class OrderElementServiceImpl implements OrderElementService {
 
     /** Удалить элемент заказа из корзины */
     @Override
+    @Transactional
     public void deleteOrderElem(long id) {
+
         OrderElement orderElement = orderElementDAO.getOne(id);
+
+        calendarDAO.delete(orderElement.getCalendar());
+
         Set<OrderedExtras> orderedExtras = orderElement.getOrderedExtras();
         for(OrderedExtras orderedExtra : orderedExtras) {
             orderedExtra.setRatesAndServices(new HashSet<>());
@@ -83,9 +93,15 @@ public class OrderElementServiceImpl implements OrderElementService {
 
     /** Очистить корзину */
     @Override
+    @Transactional
     public void deleteAllOderElem() {
         UserData userData = userDataService.getLoginnedAccount();
-        List<Long> orderElementList= userData.getOrderElements().stream().map(OrderElement::getId).collect(Collectors.toList());
+        List<Long> orderElementList = userData.getOrderElements().stream().map(OrderElement::getId).collect(Collectors.toList());
+
+        List<Calendar> calendarList = userData.getOrderElements().stream().map(OrderElement::getCalendar).collect(Collectors.toList());
+
+        calendarList.forEach(x-> calendarDAO.deleteById(x.getId()));
+
         for(long orderElementId : orderElementList) {
             OrderElement orderElement = orderElementDAO.getOne(orderElementId);
             Set<OrderedExtras> orderedExtras = orderElement.getOrderedExtras();
