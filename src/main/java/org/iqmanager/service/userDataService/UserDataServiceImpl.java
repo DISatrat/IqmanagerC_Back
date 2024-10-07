@@ -11,6 +11,9 @@ import org.iqmanager.repository.UserDataDAO;
 import org.iqmanager.repository.UserLoginDataDAO;
 import org.iqmanager.service.postService.PostService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.authentication.*;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -97,11 +100,22 @@ public class UserDataServiceImpl implements UserDataService {
 
     /** Получение корзины */
     @Override
-   public List<BasketDTO> getBasket() {
+    public Page<BasketDTO> getFilteredBasket(List<String> filter, Pageable pageable) {
+        UserData userData = getUser(getLoginnedAccount().getId());
+        List<OrderElement> orderElements = userData.getOrderElements().stream()
+                .filter(orderElement -> filter.contains(orderElement.getStatusOrder())) // замените на реальный критерий фильтрации
+                .collect(Collectors.toList());
+        List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
+        return new PageImpl<>(basketDTOs, pageable, basketDTOs.size());
+    }
+
+    @Override
+    public Page<BasketDTO> getBasket(Pageable pageable) {
         UserData userData = getUser(getLoginnedAccount().getId());
         List<OrderElement> orderElements = userData.getOrderElements();
-        return orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
-   }
+        List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
+        return new PageImpl<>(basketDTOs, pageable, basketDTOs.size());
+    }
 
    /** Добавление в избранное */
     @Override
