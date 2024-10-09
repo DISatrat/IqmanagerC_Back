@@ -13,6 +13,9 @@ import org.iqmanager.service.postService.PostService;
 import org.iqmanager.service.userDataService.UserDataService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,32 +51,37 @@ public class BasketController {
      * Записи из корзины
      */
     @PostMapping("/basket")
-    public ResponseEntity<List<BasketDTO>> getBasket(@RequestBody(required = false) long[] idArr,
-                                                     @RequestParam(required = false) List<String> filter) {
+    public ResponseEntity<Map<String, Object>> getBasket(@RequestBody(required = false) long[] idArr,
+                                                         @RequestParam(required = false) List<String> filter,
+                                                         @RequestParam(defaultValue = "0") int page,
+                                                         @RequestParam(defaultValue = "10") int size) {
         try {
             if (userDataService.hasUserLoginned()) {
+                Pageable pageable = PageRequest.of(page, size);
+                Page<BasketDTO> basketPage;
+
                 if (filter != null) {
-                    return ResponseEntity.ok(userDataService.getBasket().stream().filter(x -> {
-                        for (String s : filter) {
-                            if (Objects.equals(x.getStatus(), s)) {
-                                return true;
-                            }
-                        }
-                        return false;
-                    }).collect(Collectors.toList()));
+                    basketPage = userDataService.getFilteredBasket(filter, pageable);
+                } else {
+                    basketPage = userDataService.getBasket(pageable);
                 }
-                return ResponseEntity.ok(userDataService.getBasket());
+
+                Map<String, Object> response = new LinkedHashMap<>();
+                response.put("basket", basketPage.getContent());
+                response.put("size", basketPage.getTotalElements());
+
+                return ResponseEntity.ok(response);
             } else {
                 List<BasketDTO> basket = new ArrayList<>();
                 for (long id : idArr) {
                     basket.add(orderElementService.getBasketDTO(id));
                 }
-                return ResponseEntity.ok(basket);
+                return ResponseEntity.ok(Collections.singletonMap("basket", basket));
             }
         } catch (Exception e) {
             e.printStackTrace();
             logger.warn("BasketController -> getBasket ERROR");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyMap());
         }
     }
 

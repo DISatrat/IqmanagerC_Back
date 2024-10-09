@@ -84,7 +84,9 @@ public class HeaderController {
     public ResponseEntity<String> saveTicket(@ModelAttribute RequestForm requestForm) {
         try {
             requestForm.setDateOrder(Instant.now());
-            requestForm.setImage(fileService.upload(requestForm.getFile(), imageDirectoryPath));
+            if (requestForm.getFile() != null && !requestForm.getFile().isEmpty()) {
+                requestForm.setImage(fileService.upload(requestForm.getFile(), imageDirectoryPath));
+            }
             requestFormService.save(requestForm);
             return ResponseEntity.ok("Successfully");
         } catch (Exception e) {
@@ -93,6 +95,7 @@ public class HeaderController {
             return ResponseEntity.badRequest().build();
         }
     }
+
 
     /**
      * Поисковик
