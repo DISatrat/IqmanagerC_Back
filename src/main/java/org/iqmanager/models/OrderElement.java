@@ -82,9 +82,9 @@ public class OrderElement {
     private UserData userData;
 
     /** Оплата */
-    @OneToMany(mappedBy = "orderElement", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JsonIgnore
-    private List <Payment> payments;
+//    @OneToMany(mappedBy = "orderElement", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+//    @JsonIgnore
+//    private List <Payment> payments;
 
 
     @OneToMany(cascade = CascadeType.MERGE,fetch = FetchType.EAGER, orphanRemoval = true)
@@ -96,6 +96,13 @@ public class OrderElement {
     @JoinColumn(name = "calendar_id")
     @JsonIgnore
     private Calendar calendar;
+
+    public void setOrderedExtras(Set<OrderedExtras> orderedExtras) {
+        this.orderedExtras.clear();
+        if (orderedExtras != null) {
+            this.orderedExtras.addAll(orderedExtras);
+        }
+    }
 
     public void addOrderedExtras(OrderedExtras orderedExtra) {
         orderedExtras.add(orderedExtra);

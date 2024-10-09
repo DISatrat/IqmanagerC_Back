@@ -50,7 +50,7 @@ public class BasketController {
     /**
      * Записи из корзины
      */
-    @PostMapping("/basket")
+    @GetMapping("/basket")
     public ResponseEntity<Map<String, Object>> getBasket(@RequestBody(required = false) long[] idArr,
                                                          @RequestParam(required = false) List<String> filter,
                                                          @RequestParam(defaultValue = "0") int page,

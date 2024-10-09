@@ -1,10 +1,12 @@
 package org.iqmanager.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.iqmanager.models.enum_models.PaymentMethod;
+import org.iqmanager.models.enum_models.PaymentStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -47,8 +49,9 @@ public class Payment {
     private BigDecimal paidInterest;
 
     /** Статус платежа */
+    @Enumerated(EnumType.STRING)
     @Column(name = "payment_status")
-    private String paymentStatus;
+    private PaymentStatus paymentStatus;
 
     /** Признак тестового платежа */
     @Column(name = "is_test")
@@ -71,8 +74,9 @@ public class Payment {
     private Instant createdAt;
 
     /** Заказ */
-    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_element_id", referencedColumnName = "id")
+    @JsonIgnore
     private OrderElement orderElement;
 
     @Override
