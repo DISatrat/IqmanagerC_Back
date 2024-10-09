@@ -79,20 +79,26 @@ CREATE TABLE `iqmanager`.`order_element` (
 
 # Детали оплаты
 CREATE TABLE `iqmanager`.`payment` (
-    `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
+    `id` BIGINT(19) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    `transaction_id` VARCHAR(255) NOT NULL,
     `pay_date` DATETIME NOT NULL,
-    `payment_method` VARCHAR(50) NOT NULL,
-    `payment_number` VARCHAR(50) NOT NULL,
-    `document_number` VARCHAR(50) NOT NULL,
-    `payment_status` VARCHAR(50) NOT NULL,
-    `price` BIGINT(8) NOT NULL,
-    `paid_interest` DOUBLE NOT NULL,
-    PRIMARY KEY (`id`)
+    `payment_method` VARCHAR(255),
+    `price` DECIMAL(19,4) NOT NULL,
+    `paid_interest` DECIMAL(19,4) NOT NULL,
+    `payment_status` VARCHAR(255) NOT NULL,
+    `is_test` BOOLEAN DEFAULT FALSE,
+    `refunded_amount` DECIMAL(19, 4),
+    `description` VARCHAR(255),
+    `currency` VARCHAR(50) DEFAULT 'RUB',
+    `created_at` DATETIME NOT NULL,
+    `order_element_id` BIGINT NOT NULL,
+    CONSTRAINT fk_order_element FOREIGN KEY (order_element_id) REFERENCES order_element(id)
+
 );
 
 #Объявление
 CREATE TABLE `iqmanager`.`post` (
-    `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
+    `id` BIGINT(19) NOT NULL AUTO_INCREMENT ,
     `name` VARCHAR(50) NOT NULL,
     `image` VARCHAR(100) NULL,
     `zip_image` VARCHAR(100) NULL,
@@ -484,10 +490,7 @@ ALTER TABLE post ADD CONSTRAINT fk_post_performer_id FOREIGN KEY (id_performer) 
 ALTER TABLE conditions ADD COLUMN `post_id` BIGINT(19) NOT NULL;
 ALTER TABLE conditions ADD CONSTRAINT fk_post_conditions_id FOREIGN KEY (post_id) REFERENCES `post`(id);
 
-ALTER TABLE payment
-    ADD COLUMN `order_element_id` BIGINT(19) NOT NULL;
-ALTER TABLE payment
-    ADD CONSTRAINT fk_payment_order_id FOREIGN KEY (order_element_id) REFERENCES `order_element` (id);
+
 
 ALTER TABLE `iqmanager`.`order_element`
     ADD COLUMN `calendar_id` BIGINT(19) NULL;

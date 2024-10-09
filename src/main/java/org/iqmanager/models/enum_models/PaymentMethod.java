@@ -1,11 +1,56 @@
 package org.iqmanager.models.enum_models;
-/**
- @author olegbumazhniy@yandex.ru
- @create 2021.09.24
- @description Варианты оплаты
- */
+
 public enum PaymentMethod {
-    SBERBANK,
-    BANK_ACCOUNT,
-    MANDARINPAY
+
+    /** "Покупки в кредит" от СберБанка*/
+    sber_loan,
+
+    /** Альфа-Клик*/
+    alfabank,
+
+    /** Баланс телефона*/
+    mobile_balance,
+
+    /** Банковская карта*/
+    bank_card,
+
+    /** Заплатить частями*/
+    installments,
+
+    /** Наличные*/
+    cash,
+
+    /** СБП*/
+    sbp,
+
+    /** СберБанк Бизнес Онлайн*/
+    b2b_sberbank,
+
+    /** Электронный сертификат*/
+    electronic_certificate,
+
+    /** ЮMoney*/
+    yoo_money,
+
+    /** Apple Pay*/
+    apple_pay,
+
+    /** Google Pay*/
+    google_pay,
+
+    /** QIWI Кошелёк*/
+    qiwi,
+
+    /** SberPay*/
+    sberbank,
+
+    /** T-Pay*/
+    tinkoff_bank,
+
+    /** WeChat*/
+    wechat,
+
+    /** WebMoney*/
+    webmoney
+
 }
