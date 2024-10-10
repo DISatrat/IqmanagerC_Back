@@ -25,4 +25,5 @@ public class PaymentDTO {
     private String description;
     private long orderElementId;
     private Instant createdAt;
+    private String currency;
 }

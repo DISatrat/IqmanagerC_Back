@@ -5,6 +5,8 @@ import org.iqmanager.dto.OrderElemDTO;
 import org.iqmanager.models.OrderElement;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public interface OrderElementService {
     OrderElement save(OrderElement orderElement);
@@ -22,4 +24,6 @@ public interface OrderElementService {
     BasketDTO getBasketDTO(long id);
 
     long calculatePrice(OrderElemDTO orderElemDTO, OrderElement orderElement);
+
+    List<OrderElement> getAllOrderElementsWithPaymentsByUserId(Long userId);
 }

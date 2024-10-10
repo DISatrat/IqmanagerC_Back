@@ -118,7 +118,7 @@ public class OrderElementServiceImpl implements OrderElementService {
     /** Получить элемент заказа по id */
     @Override
     public OrderElement getOrderElement(long id) {
-        return orderElementDAO.getOne(id);
+        return orderElementDAO.findById(id).orElse(null);
     }
 
     /** Получить DTO заказа по id */
@@ -209,6 +209,11 @@ public class OrderElementServiceImpl implements OrderElementService {
 //            System.out.println(id+" "+title+" "+userId);
 //        }
         return numKm;
+    }
+
+    @Override
+    public List<OrderElement> getAllOrderElementsWithPaymentsByUserId(Long userId) {
+        return orderElementDAO.findAllWithPaymentsByUserId(userId);
     }
 
     private static HttpURLConnection conn;

@@ -10,6 +10,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +39,7 @@ public class PaymentServiceImpl implements PaymentService {
         }
         Payment payment = modelMapper.map(paymentDTO, Payment.class);
         payment.setOrderElement(orderElement);
-        payment.setCreatedAt(Instant.now());
+        payment.setCreatedAt(Instant.now().plus(Duration.ofHours(3)));
         return paymentDAO.save(payment);
     }
 
@@ -48,15 +49,12 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     @Override
-    public List<String> getPaymentStatusByOrderElementId(Long orderElementId) {
+    public List<Payment> getPaymentByOrderElementId(Long orderElementId) {
         OrderElement orderElement = orderElementService.getOrderElement(orderElementId);
         if (orderElement == null) {
             throw new IllegalArgumentException("OrderElement with ID " + orderElementId + " does not exist.");
         }
-        List<Payment> payments = paymentDAO.findAllByOrderElementId(orderElementId);
-        return payments.stream()
-                .map(payment -> payment.getId() + " - " + payment.getPaymentStatus())
-                .collect(Collectors.toList());
+        return paymentDAO.findAllByOrderElementId(orderElementId);
     }
 }
 

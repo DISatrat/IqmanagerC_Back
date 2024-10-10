@@ -12,5 +12,5 @@ import java.util.Optional;
 public interface PaymentService {
     Optional<Payment> getPaymentById(Long id);
     Payment addPayment(PaymentDTO paymentDTO);
-    List<String> getPaymentStatusByOrderElementId(Long orderElementId);
+    List<Payment> getPaymentByOrderElementId(Long orderElementId);
 }
