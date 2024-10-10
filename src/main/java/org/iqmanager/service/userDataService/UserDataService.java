@@ -6,6 +6,8 @@ import org.iqmanager.models.OrderElement;
 import org.iqmanager.models.PerformerData;
 import org.iqmanager.models.Post;
 import org.iqmanager.models.UserData;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -18,7 +20,8 @@ public interface UserDataService {
     void addToFavorite(long id_post);
     void addToBasket(OrderElement orderElement);
     boolean userNotExists(String phone);
-    List<BasketDTO> getBasket();
+    Page<BasketDTO> getFilteredBasket(List<String> filter, Pageable pageable);
+    Page<BasketDTO> getBasket(Pageable pageable);
     void passwordReset(String phone, String password);
     long addToBasketForUnregistered (OrderElement orderElement);
     void addPurchasedNumbers(Post post);
