@@ -212,8 +212,8 @@ public class OrderElementServiceImpl implements OrderElementService {
     }
 
     @Override
-    public List<OrderElement> getAllOrderElementsWithPaymentsByUserId(Long userId) {
-        return orderElementDAO.findAllWithPaymentsByUserId(userId);
+    public List<OrderElement> getAllOrderElementsWithPayments() {
+        return orderElementDAO.findAllWithPaymentsByUserId(userDataService.getLoginnedAccount().getId());
     }
 
     private static HttpURLConnection conn;

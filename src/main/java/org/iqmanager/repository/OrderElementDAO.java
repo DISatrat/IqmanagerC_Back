@@ -13,6 +13,6 @@ public interface OrderElementDAO extends JpaRepository<OrderElement, Long> {
 
     OrderElement findOrderElementById(long id);
 
-    @Query("SELECT oe FROM OrderElement oe JOIN oe.payments p WHERE oe.userData.id = :userId")
+    @Query("SELECT DISTINCT oe FROM OrderElement oe JOIN oe.payments p WHERE oe.userData.id = :userId")
     List<OrderElement> findAllWithPaymentsByUserId(@Param("userId") Long userId);
 }
