@@ -29,8 +29,8 @@ public class ApplicationC extends SpringBootServletInitializer {
 //    private static final String PASSWORD = "root";
     private static final Logger logger = LoggerFactory.getLogger(ApplicationC.class);
 
-    //   public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
-   public static final String URL_WEB = "http://79.174.86.215:3000";
+       public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
+//   public static final String URL_WEB = "http://79.174.86.215:3000";
 
     public static void main(String[] args) {
         flywayMigrations(URL, USER, PASSWORD);

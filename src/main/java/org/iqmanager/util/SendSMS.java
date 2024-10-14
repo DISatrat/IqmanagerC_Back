@@ -1,16 +1,23 @@
 package org.iqmanager.util;
 
 
-import org.apache.http.client.fluent.Content;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
+import org.apache.http.client.fluent.Response;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.iqmanager.models.PerformerData;
+
 
 import java.io.IOException;
 import java.util.List;
 
 
 public class SendSMS {
+
+    private static final Logger logger = LoggerFactory.getLogger(SendSMS.class);
 
     /** SMS для регистрации заказчика */
     public static void sendAuthorization(String phone, String code) throws IOException {
