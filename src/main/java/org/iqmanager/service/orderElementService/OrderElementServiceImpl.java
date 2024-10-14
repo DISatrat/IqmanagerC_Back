@@ -158,7 +158,7 @@ public class OrderElementServiceImpl implements OrderElementService {
             tariff = postService.getPost(orderElemDTO.getIdPost()).getPrice();
         }
 
-        long result = (long) ((tariff +priceRates) * (orderElemDTO.getFactor()));
+        long result = (long) ((tariff  * orderElemDTO.getFactor()) + priceRates);
 
         List<Calendar> calenders = calendarService.getCalendarByPost(orderElemDTO.getIdPost());
 
