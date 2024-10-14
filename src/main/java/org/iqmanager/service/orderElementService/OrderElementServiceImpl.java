@@ -151,30 +151,18 @@ public class OrderElementServiceImpl implements OrderElementService {
                 priceRates += extras.getRatesAndServices().stream().mapToLong(RatesAndServices::getPrice).sum();
             }
         }
+
         if(orderElemDTO.getExtra()!= null && !orderElemDTO.getExtra().isEmpty() && hasRate) {
             tariff = ratesService.getPriceService(orderElemDTO.getTariffId());
         } else {
             tariff = postService.getPost(orderElemDTO.getIdPost()).getPrice();
         }
 
-        long result = (long) (tariff +( orderElemDTO.getFactor()*postService.getPost(orderElemDTO.getIdPost()).getPrice()) + priceRates);
+        long result = (long) ((tariff +priceRates) * (orderElemDTO.getFactor()));
 
         List<Calendar> calenders = calendarService.getCalendarByPost(orderElemDTO.getIdPost());
 
         long beginEvent = orderElemDTO.getDateEvent().getEpochSecond();
-//
-//       String paymentType = orderElement.getPost().getPaymentType();
-//
-//        if (Objects.equals(paymentType, "PEOPLE")) {
-//            result = (long) (result * orderElemDTO.getPeople());
-//        }
-//        if (Objects.equals(paymentType, "HOURS")) {
-//            result = (long) (result * orderElemDTO.getDuration());
-//        }
-//        if (Objects.equals(paymentType, "HOURS_AND_FIX")) {
-//            result = (long) (result + result * orderElemDTO.getDuration());
-//        }
-  
 
         for (Calendar calendar : calenders) {
             if (calendar.getBeginDate().getEpochSecond() >= beginEvent && calendar.getEndDate().getEpochSecond() < beginEvent) {
