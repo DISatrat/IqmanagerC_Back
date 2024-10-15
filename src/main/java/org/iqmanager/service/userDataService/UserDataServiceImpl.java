@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -106,16 +107,34 @@ public class UserDataServiceImpl implements UserDataService {
                 .filter(orderElement -> filter.contains(orderElement.getStatusOrder()))
                 .collect(Collectors.toList());
         List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
-        return new PageImpl<>(basketDTOs, pageable, basketDTOs.size());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), basketDTOs.size());
+
+        if (start >= basketDTOs.size()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, basketDTOs.size());
+        }
+
+        return new PageImpl<>(basketDTOs.subList(start, end), pageable, basketDTOs.size());
     }
+
 
     @Override
     public Page<BasketDTO> getBasket(Pageable pageable) {
         UserData userData = getUser(getLoginnedAccount().getId());
         List<OrderElement> orderElements = userData.getOrderElements();
         List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
-        return new PageImpl<>(basketDTOs, pageable, basketDTOs.size());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), basketDTOs.size());
+
+        if (start >= basketDTOs.size()) {
+            return new PageImpl<>(Collections.emptyList(), pageable, basketDTOs.size());
+        }
+
+        return new PageImpl<>(basketDTOs.subList(start, end), pageable, basketDTOs.size());
     }
+
 
     /** Добавление в избранное */
     @Override

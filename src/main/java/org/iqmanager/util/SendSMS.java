@@ -1,15 +1,11 @@
 package org.iqmanager.util;
 
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpResponseException;
 import org.apache.http.client.fluent.Form;
 import org.apache.http.client.fluent.Request;
-import org.apache.http.client.fluent.Response;
+import org.iqmanager.models.PerformerData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.iqmanager.models.PerformerData;
-
 
 import java.io.IOException;
 import java.util.List;
