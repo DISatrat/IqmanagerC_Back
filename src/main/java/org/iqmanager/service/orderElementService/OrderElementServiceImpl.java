@@ -273,8 +273,7 @@ public class OrderElementServiceImpl implements OrderElementService {
                 reader.close();
             }
 
-
-            double lengthKm = distance;
+            double lengthKm = (distance == null) ? 0 : distance;
 
             String deliveryType = post.getDeliveryType();
             DeliveryType parsedType = DeliveryType.valueOf(deliveryType);
