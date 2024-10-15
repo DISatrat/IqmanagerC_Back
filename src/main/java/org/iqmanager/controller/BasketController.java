@@ -65,11 +65,9 @@ public class BasketController {
                 } else {
                     basketPage = userDataService.getBasket(pageable);
                 }
-
                 Map<String, Object> response = new LinkedHashMap<>();
                 response.put("basket", basketPage.getContent());
                 response.put("size", basketPage.getTotalElements());
-
                 return ResponseEntity.ok(response);
             } else {
                 List<BasketDTO> basket = new ArrayList<>();

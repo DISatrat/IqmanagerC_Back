@@ -3,7 +3,6 @@ package org.iqmanager.controller;
 import org.iqmanager.dto.PaymentDTO;
 import org.iqmanager.models.OrderElement;
 import org.iqmanager.models.Payment;
-import org.iqmanager.models.enum_models.PaymentStatus;
 import org.iqmanager.service.orderElementService.OrderElementService;
 import org.iqmanager.service.paymentService.PaymentService;
 import org.iqmanager.service.userDataService.UserDataService;
@@ -52,32 +51,14 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @GetMapping("/getPaymentByOrderElementId/{orderElementId}")
-    public ResponseEntity<List<Payment>> getPaymentStatusByOrderElementId(@PathVariable Long orderElementId) {
-        try {
-            if (userDataService.hasUserLoginned()) {
-                List<Payment> payments = paymentService.getPaymentByOrderElementId(orderElementId);
-                if (!payments.isEmpty()) {
-                    return ResponseEntity.ok(payments);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.warn("PaymentController -> getPaymentStatusByOrderElementId ERROR: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
-    @GetMapping("/getOrderElementsWithPayments/{userId}")
-    public ResponseEntity<List<OrderElement>> getOrderElementsWithPaymentsByUserId(@PathVariable Long userId) {
+    @GetMapping("/getPaymentByTransactionId/{transactionId}")
+    public ResponseEntity<Payment> getPaymentByTransactionId(@PathVariable String transactionId) {
         try {
             if (userDataService.hasUserLoginned()) {
-                List<OrderElement> orderElements = orderElementService.getAllOrderElementsWithPaymentsByUserId(userId);
-                if (!orderElements.isEmpty()) {
-                    return ResponseEntity.ok(orderElements);
+                Payment payment = paymentService.getPaymentByTransactionId(transactionId).orElse(null);
+                if (payment != null) {
+                    return ResponseEntity.ok(payment);
                 } else {
                     return ResponseEntity.notFound().build();
                 }
@@ -85,7 +66,7 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.warn("PaymentController -> getOrderElementsWithPaymentsByUserId ERROR: " + e.getMessage());
+            logger.warn("PaymentController -> getPaymentByPaymentId ERROR: ");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }

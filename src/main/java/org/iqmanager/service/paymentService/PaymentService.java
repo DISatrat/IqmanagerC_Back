@@ -10,7 +10,7 @@ import java.util.Optional;
 
 
 public interface PaymentService {
-    Optional<Payment> getPaymentById(Long id);
+    Optional<Payment> getPaymentByTransactionId(String transactionId);
     Payment addPayment(PaymentDTO paymentDTO);
-    List<Payment> getPaymentByOrderElementId(Long orderElementId);
+
 }

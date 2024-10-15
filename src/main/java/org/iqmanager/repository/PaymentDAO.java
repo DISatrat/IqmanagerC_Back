@@ -7,9 +7,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @RepositoryRestController
 public interface PaymentDAO extends JpaRepository<Payment, Long> {
-    List<Payment> findAllByOrderElementId(Long orderElementId);
+    Optional<Payment> findByTransactionId(String transactionId);
 }

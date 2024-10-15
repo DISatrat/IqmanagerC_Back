@@ -25,5 +25,5 @@ public interface OrderElementService {
 
     long calculatePrice(OrderElemDTO orderElemDTO, OrderElement orderElement);
 
-    List<OrderElement> getAllOrderElementsWithPaymentsByUserId(Long userId);
+
 }
