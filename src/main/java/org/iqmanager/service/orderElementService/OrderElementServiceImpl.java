@@ -211,10 +211,6 @@ public class OrderElementServiceImpl implements OrderElementService {
         return numKm;
     }
 
-    @Override
-    public List<OrderElement> getAllOrderElementsWithPayments() {
-        return orderElementDAO.findAllWithPaymentsByUserId(userDataService.getLoginnedAccount().getId());
-    }
 
     private static HttpURLConnection conn;
     private static final java.util.logging.Logger log = java.util.logging.Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);

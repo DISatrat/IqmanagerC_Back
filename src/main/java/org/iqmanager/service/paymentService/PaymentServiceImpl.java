@@ -12,13 +12,11 @@ import org.iqmanager.service.orderElementService.OrderElementService;
 import org.iqmanager.service.postService.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -43,36 +41,42 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public Payment addPayment(PaymentDTO paymentDTO) {
+
+        Optional<Payment> paymentOlder= paymentDAO.findByTransactionId(paymentDTO.getTransactionId());
+        Payment payment;
+        if (paymentOlder.isPresent()) {
+            payment = paymentOlder.get();
+            payment.setPaymentStatus(paymentDTO.getPaymentStatus());
+            payment.setPrice(paymentDTO.getPrice());
+            payment.setOrderElement(orderElementService.getOrderElement(paymentDTO.getOrderElementId()));
+            payment.setPaidInterest(paymentDTO.getPaidInterest());
+            payment.setRefundedAmount(paymentDTO.getRefundedAmount());
+        }else{
+            payment = modelMapper.map(paymentDTO, Payment.class);
+        }
+
         OrderElement orderElement = orderElementService.getOrderElement(paymentDTO.getOrderElementId());
         if (orderElement == null) {
             throw new IllegalArgumentException("OrderElement with ID " + paymentDTO.getOrderElementId() + " does not exist.");
         }
         Post post = postService.getPost(orderElement.getPost().getId());
-        Payment payment = modelMapper.map(paymentDTO, Payment.class);
 
         payment.setOrderElement(orderElement);
         payment.setCreatedAt(Instant.now().plus(Duration.ofHours(3)));
 
         byte prepayment = post.getPrepayment();
-        long leftToPay = orderElement.getLeftToPay();
         int paymentAmount = payment.getPrice().intValue();
-
         if (payment.getPaymentStatus() == PaymentStatus.succeeded) {
             if (prepayment != 0 && !orderElement.getStatusOrder().equals(StatusOrder.ADVANCE_PAID.name())) {
-                if (paymentAmount == (post.getPrepayment() * leftToPay)/100) {
+                if (paymentAmount == (post.getPrepayment() * orderElement.getLeftToPay())/100) {
                     orderElement.setStatusOrder(StatusOrder.ADVANCE_PAID.name());
-                    orderElement.setLeftToPay(leftToPay - paymentAmount);
+                    orderElement.setLeftToPay(orderElement.getLeftToPay() - paymentAmount);
                 }
-            } else if (orderElement.getStatusOrder().equals(StatusOrder.ADVANCE_PAID.name())) {
-                orderElement.setLeftToPay(leftToPay - paymentAmount);
-                if (leftToPay == 0) {
-                    orderElement.setStatusOrder(StatusOrder.WAITING_EXECUTION.name());
-                }
-            } else {
-                orderElement.setLeftToPay(leftToPay - paymentAmount);
-                if (leftToPay == 0) {
-                    orderElement.setStatusOrder(StatusOrder.WAITING_EXECUTION.name());
-                }
+            } else if (orderElement.getStatusOrder().equals(StatusOrder.ADVANCE_PAID.name()) || prepayment == 0) {
+                orderElement.setLeftToPay(orderElement.getLeftToPay() - paymentAmount);
+            }
+            if (orderElement.getLeftToPay() == 0) {
+                orderElement.setStatusOrder(StatusOrder.WAITING_EXECUTION.name());
             }
             orderElementDAO.save(orderElement);
         }
@@ -81,17 +85,9 @@ public class PaymentServiceImpl implements PaymentService {
 
 
     @Override
-    public Optional<Payment> getPaymentById(Long id) {
-        return paymentDAO.findById(id);
+    public Optional<Payment> getPaymentByTransactionId(String transactionId) {
+        return paymentDAO.findByTransactionId(transactionId);
     }
 
-    @Override
-    public List<Payment> getPaymentByOrderElementId(Long orderElementId) {
-        OrderElement orderElement = orderElementService.getOrderElement(orderElementId);
-        if (orderElement == null) {
-            throw new IllegalArgumentException("OrderElement with ID " + orderElementId + " does not exist.");
-        }
-        return paymentDAO.findAllByOrderElementId(orderElementId);
-    }
 }
 

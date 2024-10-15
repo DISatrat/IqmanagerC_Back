@@ -51,48 +51,12 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @GetMapping("/getPaymentByOrderElementId/{orderElementId}")
-    public ResponseEntity<List<Payment>> getPaymentStatusByOrderElementId(@PathVariable Long orderElementId) {
-        try {
-            if (userDataService.hasUserLoginned()) {
-                List<Payment> payments = paymentService.getPaymentByOrderElementId(orderElementId);
-                if (!payments.isEmpty()) {
-                    return ResponseEntity.ok(payments);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.warn("PaymentController -> getPaymentStatusByOrderElementId ERROR: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
 
-    @GetMapping("/getOrderElementsWithPayments")
-    public ResponseEntity<List<OrderElement>> getOrderElementsWithPaymentsByUserId() {
+    @GetMapping("/getPaymentByTransactionId/{transactionId}")
+    public ResponseEntity<Payment> getPaymentByTransactionId(@PathVariable String transactionId) {
         try {
             if (userDataService.hasUserLoginned()) {
-                List<OrderElement> orderElements = orderElementService.getAllOrderElementsWithPayments();
-                if (!orderElements.isEmpty()) {
-                    return ResponseEntity.ok(orderElements);
-                } else {
-                    return ResponseEntity.notFound().build();
-                }
-            }
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.warn("PaymentController -> getOrderElementsWithPaymentsByUserId ERROR: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
-    }
-    @GetMapping("/getPaymentById/{id}")
-    public ResponseEntity<Payment> getPaymentByPaymentId(@PathVariable Long id) {
-        try {
-            if (userDataService.hasUserLoginned()) {
-                Payment payment = paymentService.getPaymentById(id).orElse(null);
+                Payment payment = paymentService.getPaymentByTransactionId(transactionId).orElse(null);
                 if (payment != null) {
                     return ResponseEntity.ok(payment);
                 } else {
