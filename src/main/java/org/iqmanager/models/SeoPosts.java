@@ -66,7 +66,7 @@ public class SeoPosts {
     private long postId;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    @JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
     private Post post;
 
 }
