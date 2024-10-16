@@ -39,6 +39,7 @@ public class SeoPosts {
 
     /** Мета-тег title */
     @Column(name = "title")
+    @Lob
     private String title;
 
     /** Мета-тег description */
@@ -61,12 +62,8 @@ public class SeoPosts {
     @Column(name = "upload_mode")
     private String uploadMode;
 
-    /** ID объявления */
-    @Column(name = "post_id")
-    private long postId;
-
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_id", referencedColumnName = "id", insertable = false, updatable = false)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
     private Post post;
 
 }

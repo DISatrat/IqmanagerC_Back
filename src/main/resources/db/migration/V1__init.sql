@@ -330,7 +330,7 @@ CREATE TABLE `iqmanager`.`seo_posts` (
   `date` DATETIME NOT NULL,
   `country` VARCHAR(45) NULL,
   `region` VARCHAR(45) NULL,
-  `title` VARCHAR(512) NULL,
+  `title` LONGTEXT NULL,
   `description` VARCHAR(1024) NULL,
   `turbo_status` VARCHAR(128) NULL,
   `link` VARCHAR(256) NULL,
