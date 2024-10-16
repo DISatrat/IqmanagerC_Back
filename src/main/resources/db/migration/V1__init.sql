@@ -325,30 +325,21 @@ CREATE TABLE `iqmanager`.`admin_x_role`(
 
 #SEO
 CREATE TABLE `iqmanager`.`seo_posts` (
-  `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
+  `id` BIGINT(19) NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `name` VARCHAR(128) NULL,
+  `date` DATETIME NOT NULL,
+  `country` VARCHAR(45) NULL,
+  `region` VARCHAR(45) NULL,
   `title` LONGTEXT NULL,
-  `description` LONGTEXT NULL,
-  `keywords` LONGTEXT NULL,
-  `robots` VARCHAR(45) NULL,
-  `content_type` LONGTEXT NULL,
-  `canonical` LONGTEXT NULL,
+  `description` VARCHAR(1024) NULL,
+  `turbo_status` VARCHAR(128) NULL,
+  `link` VARCHAR(256) NULL,
+  `upload_status` VARCHAR(128) NULL,
+  `upload_mode` VARCHAR(45) NULL,
   `post_id` BIGINT(19) NOT NULL,
-  PRIMARY KEY (`id`),
   CONSTRAINT fk_seo_post FOREIGN KEY (post_id) REFERENCES `post`(id)
 );
-#SEO
-CREATE TABLE `iqmanager`.`seo_categories` (
-    `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
-    `title` LONGTEXT NULL,
-    `description` LONGTEXT NULL,
-    `keywords` LONGTEXT NULL,
-    `robots` VARCHAR(45) NULL,
-    `content_type` LONGTEXT NULL,
-    `canonical` LONGTEXT NULL,
-    `category_id` BIGINT(19) NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT fk_seo_categories FOREIGN KEY (category_id) REFERENCES `category`(id)
-);
+
 
 CREATE TABLE `iqmanager`.`contract` (
   `id` BIGINT(19) NOT NULL AUTO_INCREMENT,

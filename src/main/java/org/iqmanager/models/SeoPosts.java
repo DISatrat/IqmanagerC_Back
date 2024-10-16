@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.Instant;
 
 /** SEO объявлений */
 
@@ -14,37 +15,55 @@ import javax.persistence.*;
 @Setter
 @NoArgsConstructor
 public class SeoPosts {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private long id;
 
-    @Lob
+    /** Название */
+    @Column(name = "name")
+    private String name;
+
+    /** Дата и время создания */
+    @Column(name = "date")
+    private Instant date;
+
+    /** Страна */
+    @Column(name = "country")
+    private String country;
+
+    /** Регион */
+    @Column(name = "region")
+    private String region;
+
+    /** Мета-тег title */
     @Column(name = "title")
+    @Lob
     private String title;
 
-    @Lob
+    /** Мета-тег description */
     @Column(name = "description")
     private String description;
 
-    @Lob
-    @Column(name = "keywords")
-    private String keyword;
+    /** Турбо-страница */
+    @Column(name = "turbo_status")
+    private String turbo;
 
-    // todo зачем роботы?
-    @Column(name = "robots")
-    private String robot;
+    /** Ссылка на турбо страницу */
+    @Column(name = "link")
+    private String link;
 
-    // todo что это?
-    @Lob
-    @Column(name = "content_type")
-    private String contentType;
+    /** Статус загрузки */
+    @Column(name = "upload_status")
+    private String uploadStatus;
 
-    @Lob
-    @Column(name = "canonical")
-    private String canonical;
+    /** Режим загрузки */
+    @Column(name = "upload_mode")
+    private String uploadMode;
 
-    @Column(name = "post_id")
-    private long postId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", referencedColumnName = "id")
+    private Post post;
 
 }
