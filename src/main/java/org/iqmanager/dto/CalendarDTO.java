@@ -44,6 +44,6 @@ public class CalendarDTO {
                         x.getBeginDate().getEpochSecond(),
                         x.getEndDate().getEpochSecond(),
                         x.getChangePrice(),
-                        x.getStatus())).collect(Collectors.toList());
+                        x.getStatus().name())).collect(Collectors.toList());
     }
 }

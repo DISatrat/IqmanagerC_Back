@@ -7,6 +7,7 @@ import org.iqmanager.dto.ExtraForOrderElementDTO;
 import org.iqmanager.dto.OrderElemDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
+import org.iqmanager.models.enum_models.CalendarStatus;
 import org.iqmanager.models.enum_models.DeliveryType;
 import org.iqmanager.repository.CalendarDAO;
 import org.iqmanager.repository.OrderElementDAO;
@@ -140,6 +141,8 @@ public class OrderElementServiceImpl implements OrderElementService {
         long priceRates = 0;
         double tariff;
         boolean hasRate = false;
+        long result;
+        Post post = postService.getPost(orderElemDTO.getIdPost());
         for(ExtraForOrderElementDTO extraForOrderElementDTO :orderElemDTO.getExtra()) {
             if (Objects.equals(extraForOrderElementDTO.getType(), "SELECT_SINGLE")) {
                 hasRate = true;
@@ -157,22 +160,29 @@ public class OrderElementServiceImpl implements OrderElementService {
         } else {
             tariff = postService.getPost(orderElemDTO.getIdPost()).getPrice();
         }
+        if(Objects.equals(post.getPaymentType(),"HOURS_AND_FIX")){
 
-        long result = (long) ((tariff  * orderElemDTO.getFactor()) + priceRates);
+            result = (long) (post.getPrice() + post.getConditions().getAdditionalPrice() * orderElemDTO.getDuration());
+        }
+        else {
+             result = (long) ((tariff  * orderElemDTO.getFactor()) + priceRates);
+        }
+
 
         List<Calendar> calenders = calendarService.getCalendarByPost(orderElemDTO.getIdPost());
 
         long beginEvent = orderElemDTO.getDateEvent().getEpochSecond();
 
         for (Calendar calendar : calenders) {
+            long tFactor = (long) (tariff  * orderElemDTO.getFactor());
             if (calendar.getBeginDate().getEpochSecond() >= beginEvent && calendar.getEndDate().getEpochSecond() < beginEvent) {
-                if (Objects.equals(calendar.getStatus(), "PRICE_UP")) {
-                    result = result + (result * (calendar.getChangePrice() / 100));
-                } else if (Objects.equals(calendar.getStatus(), "PRICE_DOWN")) {
-                    result = result - (result * (calendar.getChangePrice() / 100));
-                } else if (Objects.equals(calendar.getStatus(), "PRICE_DOWN_FOR_AGENT")) {
+                if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
+                    result = tFactor + (tFactor * (calendar.getChangePrice() / 100));
+                } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
+                    result = tFactor - (tFactor * (calendar.getChangePrice() / 100));
+                } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
                     if (userDataService.getLoginnedAccount().isAgent()) {
-                        result = result - (result * (calendar.getChangePrice() / 100));
+                        result = tFactor - (tFactor * (calendar.getChangePrice() / 100));
                         break;
                     }
                 }

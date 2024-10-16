@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -158,8 +159,8 @@ public class UserDataServiceImpl implements UserDataService {
         PerformerData performerData = orderElement.getPost().getPerformer();
 
         Calendar calendar = new Calendar();
-
-        calendar.setStatus(String.valueOf(CalendarStatus.CONSIDERATION_OF_ORDER));
+        orderElement.setDateEvent(orderElement.getDateEvent().plus(3, ChronoUnit.HOURS));
+        calendar.setStatus(CalendarStatus.CONSIDERATION_OF_ORDER);
         calendar.setPerformer(performerData);
         calendar.setBeginDate(orderElement.getDateEvent());
         Duration duration = Duration.ofHours((long) orderElement.getDuration());

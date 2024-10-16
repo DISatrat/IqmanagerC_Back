@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.iqmanager.models.enum_models.CalendarStatus;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -37,7 +38,8 @@ public class Calendar {
 
     /** Статус */
     @Column(name = "status")
-    String status;
+    @Enumerated(EnumType.STRING)
+    CalendarStatus status;
 
     @Column(name = "used")
     int used = 0;
