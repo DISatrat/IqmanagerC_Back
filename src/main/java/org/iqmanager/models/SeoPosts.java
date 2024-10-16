@@ -48,7 +48,7 @@ public class SeoPosts {
 
     /** Турбо-страница */
     @Column(name = "turbo_status")
-    private String turboStatus;
+    private String turbo;
 
     /** Ссылка на турбо страницу */
     @Column(name = "link")
