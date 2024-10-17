@@ -18,6 +18,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,7 +42,13 @@ public class CalendarServiceImpl implements CalendarService {
      */
     @Override
     public List<Calendar> getCalendar(PerformerData performerData) {
-        return calendarDAO.getAllByPerformer(performerData);
+
+        List<Calendar> allByPerformer = calendarDAO.getAllByPerformer(performerData);
+//        allByPerformer.forEach(x -> x.setBeginDate(x.getBeginDate().plus(3, ChronoUnit.HOURS)));
+//        allByPerformer.forEach(x -> x.setEndDate(x.getEndDate().plus(3, ChronoUnit.HOURS)));
+
+        allByPerformer.forEach(x-> System.out.println(x.getBeginDate()));
+        return allByPerformer;
     }
 
     @Override

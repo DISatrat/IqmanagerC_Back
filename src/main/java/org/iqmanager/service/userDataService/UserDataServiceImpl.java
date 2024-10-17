@@ -159,7 +159,7 @@ public class UserDataServiceImpl implements UserDataService {
         PerformerData performerData = orderElement.getPost().getPerformer();
 
         Calendar calendar = new Calendar();
-        orderElement.setDateEvent(orderElement.getDateEvent().plus(3, ChronoUnit.HOURS));
+//        orderElement.setDateEvent(orderElement.getDateEvent().plus(3, ChronoUnit.HOURS));
         calendar.setStatus(CalendarStatus.CONSIDERATION_OF_ORDER);
         calendar.setPerformer(performerData);
         calendar.setBeginDate(orderElement.getDateEvent());
