@@ -62,7 +62,9 @@ public class PaymentServiceImpl implements PaymentService {
         Post post = postService.getPost(orderElement.getPost().getId());
 
         payment.setOrderElement(orderElement);
-        payment.setCreatedAt(Instant.now().plus(Duration.ofHours(3)));
+        if(payment.getCreatedAt()==null){
+            payment.setCreatedAt(Instant.now());
+        }
 
         byte prepayment = post.getPrepayment();
         int paymentAmount = payment.getPrice().intValue();
