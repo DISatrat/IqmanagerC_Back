@@ -173,23 +173,92 @@ public class OrderElementServiceImpl implements OrderElementService {
 
         long beginEvent = orderElemDTO.getDateEvent().getEpochSecond();
 
+
+        long endEvent = orderElemDTO.getDateEvent().plusSeconds((long) orderElemDTO.getDuration()).getEpochSecond();
+
         for (Calendar calendar : calenders) {
-            long tFactor = (long) (tariff  * orderElemDTO.getFactor());
-            if (calendar.getBeginDate().getEpochSecond() >= beginEvent && calendar.getEndDate().getEpochSecond() < beginEvent) {
-                if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
-                    result = tFactor + (tFactor * (calendar.getChangePrice() / 100));
-                } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
-                    result = tFactor - (tFactor * (calendar.getChangePrice() / 100));
-                } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
-                    if (userDataService.getLoginnedAccount().isAgent()) {
-                        result = tFactor - (tFactor * (calendar.getChangePrice() / 100));
-                        break;
+            long tFactor = (long) (tariff * orderElemDTO.getFactor());
+            if (beginEvent >= calendar.getBeginDate().getEpochSecond()) { // если заказ начинается внутри периода
+                if (endEvent <= calendar.getEndDate().getEpochSecond()) { // если заказ начинается и заканчивается внутри периода
+                    if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
+                        result = tFactor + (long) (tFactor * (calendar.getChangePrice() / 100.0));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
+                        result = tFactor - (long) (tFactor * (calendar.getChangePrice() / 100.0));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
+                        if (userDataService.getLoginnedAccount().isAgent()) {
+                            result = tFactor - (long) (tFactor * (calendar.getChangePrice() / 100.0));
+                            break;
+                        }
                     }
+                } else { // если заказ начинается внутри периода и заканчивается после
+                    long partInsidePeriod = calendar.getEndDate().getEpochSecond() - beginEvent; // время внутри периода
+                    long partOutsidePeriod = endEvent - calendar.getEndDate().getEpochSecond(); // время за пределами периода
+                    double partInsideDuration = (double) partInsidePeriod / orderElemDTO.getDuration();
+
+                    // Рассчитываем стоимость для части внутри периода
+                    if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
+                        result += (long) (partInsideDuration * (tFactor + (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
+                        result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
+                        if (userDataService.getLoginnedAccount().isAgent()) {
+                            result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                            break;
+                        }
+
+                        // Стоимость за пределами периода
+                        result += (long) ((1 - partInsideDuration) * tFactor);
+                    }
+                }
+            } else { // если заказ начинается до периода
+                if (endEvent <= calendar.getEndDate().getEpochSecond()) { // если заказ начинается до периода и заканчивается внутри
+                    long partInsidePeriod = endEvent - calendar.getBeginDate().getEpochSecond(); // время внутри периода
+                    long partOutsidePeriod = calendar.getBeginDate().getEpochSecond() - beginEvent; // время до периода
+                    double partInsideDuration = (double) partInsidePeriod / orderElemDTO.getDuration();
+
+                    // Стоимость за пределами периода
+                    result += (long) ((1 - partInsideDuration) * tFactor);
+                    // Стоимость внутри периода
+                    if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
+                        result += (long) (partInsideDuration * (tFactor + (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
+                        result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
+                        if (userDataService.getLoginnedAccount().isAgent()) {
+                            result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                            break;
+                        }
+                    }
+
+                } else { // если заказ начинается до периода и заканчивается после
+                    long partInsidePeriod = calendar.getEndDate().getEpochSecond() - calendar.getBeginDate().getEpochSecond(); // полное время внутри периода
+                    double partInsideDuration = (double) partInsidePeriod / orderElemDTO.getDuration();
+
+                    // Стоимость до периода
+                    long partBeforePeriod = calendar.getBeginDate().getEpochSecond() - beginEvent;
+                    result += (long) (((double) partBeforePeriod / orderElemDTO.getDuration()) * tFactor);
+
+                    // Стоимость внутри периода
+                    if (calendar.getStatus() == CalendarStatus.PRICE_UP) {
+                        result += (long) (partInsideDuration * (tFactor + (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN)) {
+                        result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                    } else if (Objects.equals(calendar.getStatus(), CalendarStatus.PRICE_DOWN_FOR_AGENT)) {
+                        if (userDataService.getLoginnedAccount().isAgent()) {
+                            result += (long) (partInsideDuration * (tFactor - (tFactor * (calendar.getChangePrice() / 100.0))));
+                            break;
+                        }
+                    }
+
+                    // Стоимость после периода
+                    long partAfterPeriod = endEvent - calendar.getEndDate().getEpochSecond();
+                    result += (long) (((double) partAfterPeriod / orderElemDTO.getDuration()) * tFactor);
                 }
             }
         }
         return result;
     }
+
     public static long getLength(String responseBody) {
         JSONObject response = new JSONObject(responseBody);
         JSONArray routes = response.getJSONArray("routes");
