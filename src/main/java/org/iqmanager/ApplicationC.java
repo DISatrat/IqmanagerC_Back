@@ -19,18 +19,18 @@ import javax.servlet.MultipartConfigElement;
 @EnableCaching
 public class ApplicationC extends SpringBootServletInitializer {
 
-//    private static final String URL = "jdbc:mysql://localhost:3306/iqmanager";
+  // private static final String URL = "jdbc:mysql://localhost:3306/iqmanager";
 
-        private static final String URL = "jdbc:mysql://79.174.88.23:18203/iqmanager";
-    private static final String USER = "root123";
-//    private static final String USER = "root";
-    private static final String PASSWORD = "rOor!23$";
+       private static final String URL = "jdbc:mysql://79.174.88.23:18203/iqmanager";
+    //private static final String USER = "root123";
+    private static final String USER = "root";
+   // private static final String PASSWORD = "rOor!23$";
     //Laptop
-//    private static final String PASSWORD = "root";
+  private static final String PASSWORD = "";
     private static final Logger logger = LoggerFactory.getLogger(ApplicationC.class);
 
-       public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
-//   public static final String URL_WEB = "http://79.174.86.215:3000";
+       //public static final String URL_WEB = "https://selfish-warthog-76.loca.lt";
+  public static final String URL_WEB = "http://91.197.98.105:3000";
 
     public static void main(String[] args) {
         flywayMigrations(URL, USER, PASSWORD);
