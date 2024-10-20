@@ -2,6 +2,7 @@ package org.iqmanager.service.orderElementService;
 
 import org.iqmanager.dto.BasketDTO;
 import org.iqmanager.dto.OrderElemDTO;
+import org.iqmanager.models.Calendar;
 import org.iqmanager.models.OrderElement;
 import org.springframework.stereotype.Service;
 
@@ -25,5 +26,5 @@ public interface OrderElementService {
 
     long calculatePrice(OrderElemDTO orderElemDTO, OrderElement orderElement);
 
-
+    long calculatePriceChange(double partInsideDuration, long tFactor, Calendar calendar);
 }
