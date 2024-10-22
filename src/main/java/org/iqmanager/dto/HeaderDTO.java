@@ -25,12 +25,15 @@ public class HeaderDTO {
     /** Количество элементов в корзине */
     private List<Long> basket;
 
+    private boolean blockStatus;
+
     private String role = "ROLE_USER";
-    public HeaderDTO(String name, boolean isAgent , List<Long> favorites, List<Long> basket) {
+    public HeaderDTO(String name, boolean isAgent , List<Long> favorites, List<Long> basket, boolean blockStatus) {
         this.name = name;
         this.agent = isAgent;
         this.favorites = favorites;
         this.basket = basket;
+        this.blockStatus = blockStatus;
     }
 
 }

@@ -65,7 +65,7 @@ public class HeaderController {
                         userData.getFavorites().stream().map(Post::getId).collect(Collectors.toList()),
                         userData.getOrderElements().stream()
                                 .filter(x -> Objects.equals(x.getStatusOrder(), StatusOrder.WAITING_PERFORMER.toString()) || Objects.equals(x.getStatusOrder(), StatusOrder.WAITING_PAYMENT.toString()) || Objects.equals(x.getStatusOrder(), StatusOrder.WAITING_EXECUTION.toString()) || Objects.equals(x.getStatusOrder(), StatusOrder.ADVANCE_PAID.toString()))
-                                .map(OrderElement::getId).collect(Collectors.toList()));
+                                .map(OrderElement::getId).collect(Collectors.toList()), userData.isBlocked());
                 return ResponseEntity.ok(headerDTO);
             } catch (Exception e) {
                 e.printStackTrace();
