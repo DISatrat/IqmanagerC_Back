@@ -33,6 +33,8 @@ public class CategoryDTO {
 
     private Map<String, Long> history;
 
+    private String template;
+
     public static CategoryDTO categoryToDTO(Category category, String language) {
         Optional<String> name = category.getCategoryNames().stream().filter(x -> Objects.equals(x.getLanguage(), language)).map(CategoryName::getName).findFirst();
         return name.map(s -> new CategoryDTO(category.getId(), category.getIdParent(), category.isItsEnd(), category.getImage(),category.getBlurImage() ,s, category.isHidden())).orElseGet(() -> new CategoryDTO(category.getId(), category.getIdParent(), category.isItsEnd(), category.getImage(), category.getBlurImage(), category.getCategoryNames().stream().filter(x -> Objects.equals(x.getLanguage(), "en")).map(CategoryName::getName).findFirst().get(),category.isHidden()));
