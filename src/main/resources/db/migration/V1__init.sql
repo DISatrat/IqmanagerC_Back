@@ -92,6 +92,7 @@ CREATE TABLE `iqmanager`.`payment` (
     `currency` VARCHAR(50) DEFAULT 'RUB',
     `created_at` DATETIME NOT NULL,
     `order_element_id` BIGINT NOT NULL,
+    `pay_to_performer` DECIMAL(19,4) NOT NULL,
     CONSTRAINT fk_order_element FOREIGN KEY (order_element_id) REFERENCES order_element(id)
 
 );
