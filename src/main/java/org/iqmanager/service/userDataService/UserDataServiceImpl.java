@@ -106,6 +106,7 @@ public class UserDataServiceImpl implements UserDataService {
         UserData userData = getUser(getLoginnedAccount().getId());
         List<OrderElement> orderElements = userData.getOrderElements().stream()
                 .filter(orderElement -> filter.contains(orderElement.getStatusOrder()))
+                .sorted((o1, o2) -> Long.compare(o2.getId(), o1.getId()))
                 .collect(Collectors.toList());
         List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
 
@@ -123,7 +124,9 @@ public class UserDataServiceImpl implements UserDataService {
     @Override
     public Page<BasketDTO> getBasket(Pageable pageable) {
         UserData userData = getUser(getLoginnedAccount().getId());
-        List<OrderElement> orderElements = userData.getOrderElements();
+        List<OrderElement> orderElements = userData.getOrderElements().stream()
+                .sorted((o1, o2) -> Long.compare(o2.getId(), o1.getId())) // Sort by id in descending order
+                .collect(Collectors.toList());
         List<BasketDTO> basketDTOs = orderElements.stream().map(BasketDTO::BasketToDTO).collect(Collectors.toList());
 
         int start = (int) pageable.getOffset();
