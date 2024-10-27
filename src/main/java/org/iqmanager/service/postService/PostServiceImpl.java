@@ -7,13 +7,17 @@ import org.iqmanager.dto.RequestDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
 import org.iqmanager.models.enum_models.PostStatus;
+import org.iqmanager.models.specification.PostSpecification;
 import org.iqmanager.repository.*;
 import org.iqmanager.service.calendarService.CalendarService;
+import org.iqmanager.service.calendarService.CalendarServiceImpl;
 import org.iqmanager.service.categoryService.CategoryService;
 import org.iqmanager.util.LevenshteinDistance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -33,16 +37,20 @@ public class PostServiceImpl implements PostService {
     private final CategoryService categoryService;
     private final RequestFormDAO requestFormDAO;
     private final ModelMapper modelMapper;
+    private final CalendarService calendarService;
+    private final CalendarDAO calendarDAO;
 
 
     @Autowired
-    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService, RequestFormDAO requestFormDAO, ModelMapper modelMapper) {
+    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService, RequestFormDAO requestFormDAO, ModelMapper modelMapper, CalendarService calendarService, CalendarDAO calendarDAO) {
         this.postDAO = postDAO;
         this.categoryDAO = categoryDAO;
         this.commentDAO = commentDAO;
         this.categoryService = categoryService;
         this.requestFormDAO = requestFormDAO;
         this.modelMapper = modelMapper;
+        this.calendarService = calendarService;
+        this.calendarDAO = calendarDAO;
     }
 
     @Override
@@ -202,6 +210,24 @@ public class PostServiceImpl implements PostService {
         return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
+    @Override
+    public Page<PostListDTO> filterPosts(Category category, long priceMin, long priceMax, Instant date, Pageable pageable) {
+        PostSpecification spec = new PostSpecification(category, priceMin, priceMax, date);
+        Page<Post> postPage = postDAO.findAll(spec, pageable);
+
+        List<Post> filteredPosts = postPage.getContent().stream()
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(filteredPosts.stream()
+                .map(post -> modelMapper.map(post, PostListDTO.class))
+                .collect(Collectors.toList()), pageable, filteredPosts.size());
+    }
+    private boolean isPerformerAvailable(PerformerData performer, Instant date) {
+        List<Calendar> calendars = calendarDAO.getAllByPerformer(performer);
+        return calendars.stream().noneMatch(calendar ->
+                !date.isBefore(calendar.getBeginDate()) && !date.isAfter(calendar.getEndDate()));
+    }
     /**
      * Получить исполнителя по объявлению
      */
