@@ -1,10 +1,13 @@
 package org.iqmanager.controller;
 
 import org.iqmanager.dto.*;
+import org.iqmanager.models.Category;
 import org.iqmanager.models.Conditions;
 import org.iqmanager.models.OrderElement;
 import org.iqmanager.models.PerformerData;
+import org.iqmanager.repository.CategoryDAO;
 import org.iqmanager.service.calendarService.CalendarService;
+import org.iqmanager.service.categoryService.CategoryService;
 import org.iqmanager.service.extraService.ExtraService;
 import org.iqmanager.service.orderElementService.OrderElementService;
 import org.iqmanager.service.performerService.PerformerService;
@@ -14,6 +17,9 @@ import org.iqmanager.util.CurrencyConverter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,9 +27,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.iqmanager.ApplicationC.URL_WEB;
 
@@ -46,14 +52,17 @@ public class PostController {
 
     private final PerformerService performerService;
 
+    private final CategoryService categoryService;
+
     @Autowired
-    public PostController(PostService postService, UserDataService userDataService, ExtraService extraService, OrderElementService orderElementService, CalendarService calendarService, PerformerService performerService) {
+    public PostController(PostService postService, UserDataService userDataService, ExtraService extraService, OrderElementService orderElementService, CalendarService calendarService, PerformerService performerService, CategoryService categoryService ) {
         this.orderElementService = orderElementService;
         this.postService = postService;
         this.userDataService = userDataService;
         this.extraService = extraService;
         this.calendarService = calendarService;
         this.performerService = performerService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/post/{id}")
@@ -185,5 +194,27 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+    @PostMapping("/filterPosts")
+    public ResponseEntity<Map<String, Object>> filterPosts(@RequestParam(value = "category") String category,
+                                                           @RequestParam(value = "priceMin", required = false) Long priceMin,
+                                                           @RequestParam(value = "priceMax", required = false) Long priceMax,
+                                                           @RequestParam(value = "date", required = false) Instant date,
+                                                           @RequestParam(defaultValue = "0") int page,
+                                                           @RequestParam(defaultValue = "10") int size) {
+        try {
+            Page<PostListDTO> postPage = postService.filterPosts(category, priceMin, priceMax, date, PageRequest.of(page, size));
+
+            Map<String, Object> response = new LinkedHashMap<>();
+            response.put("posts", postPage.getContent());
+            response.put("totalElements", postPage.getTotalElements());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.warn("PostController -> filterPosts ERROR");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyMap());
+        }
+    }
+
 
 }

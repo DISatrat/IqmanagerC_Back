@@ -6,6 +6,7 @@ import org.iqmanager.dto.PostListDTO;
 import org.iqmanager.dto.RequestDTO;
 import org.iqmanager.models.*;
 import org.iqmanager.models.Calendar;
+import org.iqmanager.models.enum_models.CalendarStatus;
 import org.iqmanager.models.enum_models.PostStatus;
 import org.iqmanager.models.specification.PostSpecification;
 import org.iqmanager.repository.*;
@@ -16,6 +17,7 @@ import org.iqmanager.util.LevenshteinDistance;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -42,7 +44,7 @@ public class PostServiceImpl implements PostService {
 
 
     @Autowired
-    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService, RequestFormDAO requestFormDAO, ModelMapper modelMapper, CalendarService calendarService, CalendarDAO calendarDAO) {
+    public PostServiceImpl(PostDAO postDAO, CategoryDAO categoryDAO, CommentDAO commentDAO, CategoryService categoryService, RequestFormDAO requestFormDAO, ModelMapper modelMapper, @Lazy CalendarService calendarService, CalendarDAO calendarDAO) {
         this.postDAO = postDAO;
         this.categoryDAO = categoryDAO;
         this.commentDAO = commentDAO;
@@ -211,23 +213,30 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public Page<PostListDTO> filterPosts(Category category, long priceMin, long priceMax, Instant date, Pageable pageable) {
-        PostSpecification spec = new PostSpecification(category, priceMin, priceMax, date);
+    public Page<PostListDTO> filterPosts(String category, Long priceMin, Long priceMax, Instant date, Pageable pageable) {
+        PostSpecification spec = new PostSpecification(category, priceMin, priceMax);
         Page<Post> postPage = postDAO.findAll(spec, pageable);
 
         List<Post> filteredPosts = postPage.getContent().stream()
                 .filter(post -> isPerformerAvailable(post.getPerformer(), date))
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(filteredPosts.stream()
-                .map(post -> modelMapper.map(post, PostListDTO.class))
-                .collect(Collectors.toList()), pageable, filteredPosts.size());
+        return new PageImpl<>(
+                filteredPosts.stream()
+                        .map(post -> modelMapper.map(post, PostListDTO.class))
+                        .collect(Collectors.toList()),
+                pageable,
+                postPage.getTotalElements()
+        );
     }
+
     private boolean isPerformerAvailable(PerformerData performer, Instant date) {
         List<Calendar> calendars = calendarDAO.getAllByPerformer(performer);
         return calendars.stream().noneMatch(calendar ->
-                !date.isBefore(calendar.getBeginDate()) && !date.isAfter(calendar.getEndDate()));
+                (calendar.getStatus() == CalendarStatus.BUSY || calendar.getStatus() == CalendarStatus.DAY_OFF) &&
+                        !date.isBefore(calendar.getBeginDate()) && !date.isAfter(calendar.getEndDate()));
     }
+
     /**
      * Получить исполнителя по объявлению
      */

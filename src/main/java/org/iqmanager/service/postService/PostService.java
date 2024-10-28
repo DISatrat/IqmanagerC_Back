@@ -28,7 +28,7 @@ public interface PostService {
     PerformerData getPerformerByPostId(long id);
     List<PostListDTO> getListPosts(Category category);
 
-    Page<PostListDTO> filterPosts(Category category, long priceMin, long priceMax, Instant date, Pageable pageable);
+    Page<PostListDTO> filterPosts(String category, Long priceMin, Long priceMax, Instant date, Pageable pageable);
     void updatePostViews(long id, long newViews);
     Post findPostById(long id);
 

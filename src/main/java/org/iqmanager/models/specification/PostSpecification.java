@@ -1,46 +1,47 @@
 package org.iqmanager.models.specification;
 
 import lombok.AllArgsConstructor;
-import org.iqmanager.models.Category;
+import org.iqmanager.models.Extra;
 import org.iqmanager.models.Post;
+import org.iqmanager.models.RatesAndServices;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.criteria.Predicate;
 
 @AllArgsConstructor
 public class PostSpecification implements Specification<Post> {
 
-    private Category category;
-    private long priceMin;
-    private long priceMax;
-    private Instant date;
+    private String category;
+    private Long priceMin;
+    private Long priceMax;
 
     @Override
     public Predicate toPredicate(Root<Post> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+        query.distinct(true);
         List<Predicate> predicates = new ArrayList<>();
 
-        if (category != null) {
-            predicates.add(criteriaBuilder.equal(root.get("categories"), category));
-        }
-        if (priceMin != 0 && priceMax != 0) {
-            predicates.add(criteriaBuilder.between(root.get("price"), priceMin, priceMax));
-        }
-        if (priceMin != 0 && priceMax == 0) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("price"), priceMin));
-        }
-        if (priceMin == 0 && priceMax != 0) {
-            predicates.add(criteriaBuilder.lessThanOrEqualTo(root.get("price"), priceMax));
-        }
-        if (date != null) {
-            predicates.add(criteriaBuilder.greaterThanOrEqualTo(root.get("date"), date));
-        }
+        Subquery<Long> minPriceSubquery = query.subquery(Long.class);
+        Root<Extra> extraRoot = minPriceSubquery.from(Extra.class);
+        Join<Extra, RatesAndServices> ratesJoin = extraRoot.join("ratesAndServices");
 
-        return criteriaBuilder.and(predicates.toArray(new javax.persistence.criteria.Predicate[0]));
+        minPriceSubquery.select(criteriaBuilder.min(ratesJoin.get("price")))
+                .where(
+                        criteriaBuilder.equal(extraRoot.get("post"), root), // Ссылка на текущий пост
+                        criteriaBuilder.equal(extraRoot.get("type"), "SELECT_SINGLE")
+                );
+
+        Predicate pricePredicate = criteriaBuilder.between(
+                criteriaBuilder.coalesce(minPriceSubquery, root.get("price")), priceMin, priceMax
+        );
+        predicates.add(pricePredicate);
+
+        if (category != null && !category.isEmpty()) {
+            predicates.add(criteriaBuilder.like(root.join("categories", JoinType.INNER).join("categoryNames", JoinType.INNER).get("name"), "%" + category + "%"));
+            predicates.add(criteriaBuilder.equal(root.join("categories", JoinType.INNER).join("categoryNames", JoinType.INNER).get("language"), "ru"));
+        }
+        return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 }
