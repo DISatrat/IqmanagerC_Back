@@ -9,9 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ExtraForOrderElementDTO {
 
-
     private String title;
-
     private String type;
     private long[] idRatesAndService;
 
