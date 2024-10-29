@@ -67,7 +67,7 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("OrderElement with ID " + paymentDTO.getOrderElementId() + " does not exist.");
         }
         Post post = postService.getPost(orderElement.getPost().getId());
-        Contract contract = contractDAO.findContractByPerformerId(post.getPerformer().getId());
+        Contract contract = contractDAO.findContractByPerformerData(post.getPerformer());
 
         payment.setOrderElement(orderElement);
         if(payment.getCreatedAt()==null){

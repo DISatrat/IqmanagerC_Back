@@ -54,7 +54,7 @@ public class Contract {
     private String fullName; // ФИО
 
     @Column(name = "mail")
-    private String mail;
+    private String mail; //почтовый индекс
 
     @Column(name = "address")
     private String address;// адрес местонахождения
@@ -124,6 +124,18 @@ public class Contract {
 
     @Column(name = "passport_with_person")
     private String passportWithPerson;
+
+    @Column(name = "bank_address")
+    private String bankAddress;//адрес банка
+
+    @Column(name = "card_number")
+    private String cardNumber;//номер карты
+
+    @Column(name = "ogrnip")
+    private String ogrnip;//ОГРНИП
+
+    @Column(name = "card_holder_fio")
+    private String cardHolderFio; // ФИО владельца карты
 
     @Column(name = "signature")
     private String signature;
