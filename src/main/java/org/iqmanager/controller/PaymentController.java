@@ -1,7 +1,6 @@
 package org.iqmanager.controller;
 
 import org.iqmanager.dto.PaymentDTO;
-import org.iqmanager.models.OrderElement;
 import org.iqmanager.models.Payment;
 import org.iqmanager.service.orderElementService.OrderElementService;
 import org.iqmanager.service.paymentService.PaymentService;
@@ -12,8 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 import static org.iqmanager.ApplicationC.URL_WEB;
 

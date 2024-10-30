@@ -73,6 +73,10 @@ public class Payment {
     @Column(name = "created_at")
     private Instant createdAt;
 
+    /** Сумма к выплате исполнителю */
+    @Column(name = "pay_to_performer")
+    private BigDecimal payToPerformer;
+
     /** Заказ */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_element_id", referencedColumnName = "id")

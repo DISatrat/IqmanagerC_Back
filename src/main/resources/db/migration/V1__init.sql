@@ -92,6 +92,7 @@ CREATE TABLE `iqmanager`.`payment` (
     `currency` VARCHAR(50) DEFAULT 'RUB',
     `created_at` DATETIME NOT NULL,
     `order_element_id` BIGINT NOT NULL,
+    `pay_to_performer` DECIMAL(19,4) NULL,
     CONSTRAINT fk_order_element FOREIGN KEY (order_element_id) REFERENCES order_element(id)
 
 );
@@ -379,6 +380,10 @@ CREATE TABLE `iqmanager`.`contract` (
   `passport_main` VARCHAR(100) NOT NULL,
   `passport_registration` VARCHAR(100) NOT NULL,
   `passport_with_person` VARCHAR(100) NOT NULL,
+  `bank_address` VARCHAR(100) NULL,
+  `card_number` VARCHAR(45) NULL,
+  `card_holder_fio`VARCHAR(100) NULL,
+  `ogrnip` VARCHAR(45) NULL,
   `signature` VARCHAR(100) NULL,
   `path` VARCHAR(100) NOT NULL,
   `performer_id` BIGINT(19),

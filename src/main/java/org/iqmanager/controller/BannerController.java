@@ -18,7 +18,7 @@ import static org.iqmanager.ApplicationC.URL_WEB;
 @Validated
 @CrossOrigin(origins = URL_WEB)
 public class BannerController {
-    private static final Logger logger = LoggerFactory.getLogger(BannerController.class);
+    private final Logger logger = LoggerFactory.getLogger(BannerController.class);
     private final BannerService bannerService;
 
     public BannerController(BannerService bannerService) {
