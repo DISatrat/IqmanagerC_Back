@@ -3,7 +3,6 @@ package org.iqmanager.controller;
 import org.iqmanager.dto.BannerToShowDTO;
 import org.iqmanager.service.bannerService.BannerService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -15,8 +14,8 @@ import java.util.List;
 import static org.iqmanager.ApplicationC.URL_WEB;
 
 @RestController
+@RequestMapping("/api")
 @Validated
-@RequestMapping(value = "/api", produces = MediaType.APPLICATION_JSON_VALUE)
 @CrossOrigin(origins = URL_WEB)
 public class BannerController {
     private final Logger logger = LoggerFactory.getLogger(BannerController.class);
@@ -27,7 +26,7 @@ public class BannerController {
     }
 
     @GetMapping("/getAllBanners")
-    public ResponseEntity<List<BannerToShowDTO>> getAllBanners() {
+    public ResponseEntity<?> getAllBanners() {
         try {
             List<BannerToShowDTO> banners = bannerService.getAllBanners();
             return ResponseEntity.ok(banners);

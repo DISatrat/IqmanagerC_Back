@@ -76,6 +76,9 @@ public class UserData {
     @Column(name = "agent")
     private boolean isAgent;
 
+    @Column(name = "blocked")
+    private boolean blocked;
+
     /** Данные для входа */
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn (name="user_login_id", referencedColumnName = "id")

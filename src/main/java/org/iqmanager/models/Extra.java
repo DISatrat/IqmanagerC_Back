@@ -33,6 +33,10 @@ public class Extra {
     @OneToMany(mappedBy = "extra", cascade = {CascadeType.PERSIST, CascadeType.MERGE},fetch = FetchType.EAGER)
     private Set<RatesAndServices> ratesAndServices;
 
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
 
     @Override
     public String toString() {

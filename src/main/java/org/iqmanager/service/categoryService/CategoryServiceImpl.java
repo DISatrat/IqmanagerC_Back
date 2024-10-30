@@ -33,12 +33,45 @@ public class CategoryServiceImpl implements CategoryService {
      */
     @Override
     public List<CategoryDTO> findList(long parent_id, String language) {
+//        List<Category> categories;
+//
+//        if (parent_id == 0L) {
+//            categories = categoryDAO.findAllByIdParent(0);
+//
+//            List<Category> childCategories = categoryRelationshipDAO.findAllChildCategoryIds();
+//
+//            categories.removeAll(childCategories);
+//
+//        } else {
+//            Category parentCategory = categoryDAO.findCategoryById(parent_id);
+//
+//            if (parentCategory.getIdParent() == 0L) {
+//                List<CategoryRelationship> categoriesRelationship = categoryRelationshipDAO.findCategoryRelationshipsByParentCategory(parentCategory);
+//                categories = categoriesRelationship.stream()
+//                        .map(CategoryRelationship::getChildCategory)
+//                        .collect(Collectors.toList());
+//            } else {
+//                categories = Collections.emptyList();
+//            }
+//        }
+//
+//        List<CategoryDTO> categoryDTOList = categories.stream()
+//                .map(x -> CategoryDTO.categoryToDTO(x, language))
+//                .collect(Collectors.toList());
+//
+//        if (categoryDTOList.isEmpty()) {
+//            return categories.stream()
+//                    .map(x -> CategoryDTO.categoryToDTO(x, "en"))
+//                    .collect(Collectors.toList());
+//        }
+//
+//        return categoryDTOList;
         List<Category> categories;
 
         if (parent_id == 0L) {
             categories = categoryDAO.findAllByIdParent(0);
 
-            List<Category> childCategories = categoryRelationshipDAO.findAllChildCategoryIds();
+            List<Category> childCategories = categoryRelationshipDAO.findChildCategoriesWithMultipleParents();
 
             categories.removeAll(childCategories);
 
@@ -56,7 +89,7 @@ public class CategoryServiceImpl implements CategoryService {
         }
 
         List<CategoryDTO> categoryDTOList = categories.stream()
-                .map(x -> CategoryDTO.categoryToDTO(x, language))
+                .map(x -> CategoryDTO.categoryToDTO(x, "ru"))
                 .collect(Collectors.toList());
 
         if (categoryDTOList.isEmpty()) {
@@ -65,7 +98,24 @@ public class CategoryServiceImpl implements CategoryService {
                     .collect(Collectors.toList());
         }
 
+        categoryDTOList.forEach(x -> {
+            Category templateCategory = categoryRelationshipDAO.findTemplateByChildCategoryId(x.getId());
+            if (templateCategory != null) {
+                // Фильтруем список имен категорий по языку 'ru'
+                Optional<CategoryName> templateNameOpt = templateCategory.getCategoryNames().stream()
+                        .filter(name -> "ru".equals(name.getLanguage()))
+                        .findFirst();
+
+                // Если нашли имя, берем его, иначе ставим null
+                String templateName = templateNameOpt.map(CategoryName::getName).orElse(null);
+                x.setTemplate(templateName);
+            } else {
+                x.setTemplate(null); // Если шаблон не найден, установим null
+            }
+        });
+
         return categoryDTOList;
+
     }
 
     /**

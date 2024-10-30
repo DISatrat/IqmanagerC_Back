@@ -1,6 +1,5 @@
 package org.iqmanager.controller;
 
-import org.hibernate.transform.AliasedTupleSubsetResultTransformer;
 import org.iqmanager.dto.BasketDTO;
 import org.iqmanager.dto.FeedbackDTO;
 import org.iqmanager.dto.PurchasedNumbersDTO;
@@ -23,7 +22,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.iqmanager.ApplicationC.URL_WEB;
 
