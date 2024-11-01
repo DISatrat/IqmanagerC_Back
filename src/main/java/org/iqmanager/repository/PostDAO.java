@@ -39,5 +39,8 @@ public interface PostDAO extends JpaRepository<Post, Long>, JpaSpecificationExec
 
     Post findPostById(long id);
 
+    @Query("SELECT p FROM Post p WHERE LOWER(p.name) LIKE LOWER(CONCAT('%', :keyword, '%')) OR CAST(p.id AS string) LIKE %:keyword%")
+    List<Post> findByNameOrIdContainingIgnoreCase(@Param("keyword") String keyword);
+
     List<Post> findByNameContainingIgnoreCase(String keyword);
 }

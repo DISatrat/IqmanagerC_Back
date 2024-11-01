@@ -88,7 +88,7 @@ public class PostServiceImpl implements PostService {
     // реализация поиска
     @Override
     public List<PostListDTO> searchPostsByText(String text) {
-        List<Post> postListDTOS = postDAO.findByNameContainingIgnoreCase(text);
+        List<Post> postListDTOS = postDAO.findByNameOrIdContainingIgnoreCase(text);
         return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
     }
 
