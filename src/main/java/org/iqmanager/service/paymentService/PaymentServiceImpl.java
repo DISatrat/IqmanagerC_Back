@@ -67,22 +67,14 @@ public class PaymentServiceImpl implements PaymentService {
             throw new IllegalArgumentException("OrderElement with ID " + paymentDTO.getOrderElementId() + " does not exist.");
         }
         Post post = postService.getPost(orderElement.getPost().getId());
-        Contract contract = contractDAO.findContractByPerformerData(post.getPerformer());
+        //Contract contract = contractDAO.findContractByPerformerData(post.getPerformer());
 
         payment.setOrderElement(orderElement);
         if(payment.getCreatedAt()==null){
             payment.setCreatedAt(Instant.now());
         }
-
-        byte prepayment = post.getPrepayment();
         int paymentAmount = payment.getPrice().intValue();
-        if (payment.getPaymentStatus() == PaymentStatus.succeeded) {
-            if (prepayment != 0 && !orderElement.getStatusOrder().equals(StatusOrder.ADVANCE_PAID.name())) {
-                if (paymentAmount == (post.getPrepayment() * orderElement.getLeftToPay())/100) {
-                    orderElement.setStatusOrder(StatusOrder.ADVANCE_PAID.name());
-                    orderElement.setLeftToPay(orderElement.getLeftToPay() - paymentAmount);
-                }
-            } else if (orderElement.getStatusOrder().equals(StatusOrder.ADVANCE_PAID.name()) ) {
+        if (payment.getPaymentStatus() == PaymentStatus.succeeded && orderElement.getStatusOrder().equals(StatusOrder.WAITING_PAYMENT.name())) {
                 orderElement.setLeftToPay(orderElement.getLeftToPay() - paymentAmount);
             }
             if (orderElement.getLeftToPay() == 0) {
@@ -90,23 +82,21 @@ public class PaymentServiceImpl implements PaymentService {
             }
             orderElementDAO.save(orderElement);
 
-            int perfPay;
-            if (Objects.equals(contract.getLegalStatus(), "тип 1")) {
-                perfPay = 94;
-            } else if (Objects.equals(contract.getLegalStatus(), "тип 2")) {
-                perfPay = 90;
-            } else if (Objects.equals(contract.getLegalStatus(), "тип 3")) {
-                perfPay = 85;
-            } else if (Objects.equals(contract.getLegalStatus(), "тип 4")) {
-                perfPay = 80;
-            } else {
-                throw new IllegalArgumentException("Unknown legal status: " + contract.getLegalStatus());
-            }
-            payment.setPayToPerformer(payment.getPaidInterest()
-                    .multiply(BigDecimal.valueOf(perfPay))
-                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_DOWN));
-
-        }
+         //   int perfPay;
+//            if (Objects.equals(contract.getLegalStatus(), "тип 1")) {
+//                perfPay = 94;
+//            } else if (Objects.equals(contract.getLegalStatus(), "тип 2")) {
+//                perfPay = 90;
+//            } else if (Objects.equals(contract.getLegalStatus(), "тип 3")) {
+//                perfPay = 85;
+//            } else if (Objects.equals(contract.getLegalStatus(), "тип 4")) {
+//                perfPay = 80;
+//            } else {
+//                throw new IllegalArgumentException("Unknown legal status: " + contract.getLegalStatus());
+//            }
+//            payment.setPayToPerformer(payment.getPaidInterest()
+//                    .multiply(BigDecimal.valueOf(perfPay))
+//                    .divide(BigDecimal.valueOf(100), RoundingMode.HALF_DOWN));
         return paymentDAO.save(payment);
     }
 
