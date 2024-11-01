@@ -12,14 +12,13 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-
 import java.io.InputStream;
 
 import static org.iqmanager.ApplicationC.URL_WEB;
 
 @Validated
 @RestController
-@RequestMapping(value = "/api",produces = MediaType.ALL_VALUE)
+@RequestMapping(value = "/api", produces = MediaType.ALL_VALUE)
 @CrossOrigin(origins = URL_WEB)
 public class ResourcesController {
     private final Logger logger = LoggerFactory.getLogger(ResourcesController.class);
@@ -50,7 +49,7 @@ public class ResourcesController {
     }
 
     @PostMapping("/uploadImage")
-    public ResponseEntity<String> uploadedImage(@RequestBody MultipartFile file){
+    public ResponseEntity<String> uploadedImage(@RequestBody MultipartFile file) {
         try {
             return ResponseEntity.ok(fileService.upload(file, imageDirectoryPath));
         } catch (Exception e) {
@@ -61,8 +60,19 @@ public class ResourcesController {
     }
 
 
-    @GetMapping("/downloadPDF")
-    public ResponseEntity<byte[]> downloadPdf(@RequestParam("key") String key){
+    @GetMapping(path = "/downloadDocs", produces = "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+    public ResponseEntity<byte[]> downloadDocs(@RequestParam("key") String key) {
+        try {
+            return ResponseEntity.ok(fileService.download(key, pdfDirectoryPath).getInputStream().readAllBytes());
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.warn("Performer -> ResourcesController -> downloadImage ERROR");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+    @GetMapping(path = "/downloadPdf", produces = "application/pdf")
+    public ResponseEntity<byte[]> downloadPdf(@RequestParam("key") String key) {
         try {
             return ResponseEntity.ok(fileService.download(key, pdfDirectoryPath).getInputStream().readAllBytes());
         } catch (Exception e) {
@@ -73,7 +83,7 @@ public class ResourcesController {
     }
 
     @PostMapping("/uploadPDF")
-    public ResponseEntity<String> uploadedPdf(@RequestBody MultipartFile file){
+    public ResponseEntity<String> uploadedPdf(@RequestBody MultipartFile file) {
         try {
             return ResponseEntity.ok(fileService.upload(file, pdfDirectoryPath));
         } catch (Exception e) {
