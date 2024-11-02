@@ -278,8 +278,10 @@ CREATE TABLE `iqmanager`.`calendar` (
     `used`         INTEGER(5) NULL,
     `status` VARCHAR(45) NOT NULL,
     `order_id` BIGINT(19) NULL,
+    `post_id` BIGINT(19) NULL,
     PRIMARY KEY (`id`),
-    FOREIGN KEY (`order_id`) REFERENCES `order_element`(`id`)
+    FOREIGN KEY (`order_id`) REFERENCES `order_element`(`id`),
+    FOREIGN KEY (`post_id`) REFERENCES `post`(`id`)
 );
 
 

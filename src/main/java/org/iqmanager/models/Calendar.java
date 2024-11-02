@@ -54,4 +54,8 @@ public class Calendar {
     @JoinColumn(name = "order_id")
     @JsonIgnore
     private OrderElement orderElement;
+
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
 }
