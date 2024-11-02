@@ -134,8 +134,8 @@ public class PostController {
     @GetMapping({"/getCalendar"})
     public ResponseEntity<List<CalendarDTO>> getCalendar(@RequestParam("idPost") long idPost) {
         try {
-            PerformerData performerData = postService.getPerformerByPostId(idPost);
-            return ResponseEntity.ok(CalendarDTO.calendarToDTO(calendarService.getCalendar(performerData)));
+//            PerformerData performerData = postService.getPerformerByPostId(idPost);
+            return ResponseEntity.ok(CalendarDTO.calendarToDTO(calendarService.getCalendarByPosts(idPost)));
         } catch (Exception e) {
             e.printStackTrace();
             this.logger.warn("PostController -> getCalendar ERROR");

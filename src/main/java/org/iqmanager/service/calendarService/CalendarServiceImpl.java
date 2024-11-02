@@ -44,11 +44,22 @@ public class CalendarServiceImpl implements CalendarService {
     public List<Calendar> getCalendar(PerformerData performerData) {
 
         List<Calendar> allByPerformer = calendarDAO.getAllByPerformer(performerData);
+
         allByPerformer.forEach(x -> x.setBeginDate(x.getBeginDate().plus(3, ChronoUnit.HOURS)));
         allByPerformer.forEach(x -> x.setEndDate(x.getEndDate().plus(3, ChronoUnit.HOURS)));
 
         allByPerformer.forEach(x-> System.out.println(x.getBeginDate()));
         return allByPerformer;
+    }
+
+    @Override
+    public List<Calendar> getCalendarByPosts(long id) {
+        List<Calendar> calendars = calendarDAO.findCalendarByPost(postDAO.findPostById(id));
+
+        calendars.forEach(x -> x.setBeginDate(x.getBeginDate().plus(3, ChronoUnit.HOURS)));
+        calendars.forEach(x -> x.setEndDate(x.getEndDate().plus(3, ChronoUnit.HOURS)));
+
+        return calendars;
     }
 
     @Override

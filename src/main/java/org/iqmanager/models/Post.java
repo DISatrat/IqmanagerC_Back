@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.iqmanager.models.enum_models.CalendarType;
 import org.iqmanager.models.enum_models.PostStatus;
 import org.iqmanager.models.resources.Images;
 import org.iqmanager.models.resources.PDF;
@@ -128,6 +129,11 @@ public class Post {
     /** Дата последнего изменения */
     @Column(name = "date_edit")
     private Instant dateEdit;
+
+    @Column(name = "calendar_type")
+    @Enumerated(EnumType.STRING)
+    private CalendarType calendarType;
+
 
     /** id исполнителя */
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)

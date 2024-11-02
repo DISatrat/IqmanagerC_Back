@@ -126,6 +126,7 @@ CREATE TABLE `iqmanager`.`post` (
     `city` VARCHAR(50) NOT NULL,
     `date_creation` DATETIME NULL,
     `date_edit` DATETIME NULL,
+    `calendar_type` VARCHAR(100) NULL,
     PRIMARY KEY (`id`)
 );
 
