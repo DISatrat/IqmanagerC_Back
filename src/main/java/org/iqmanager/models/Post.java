@@ -180,6 +180,15 @@ public class Post {
     @JsonIgnore
     private List<Comment> comments;
 
+    public long getPrice() {
+        return extra.stream()
+                .filter(extra -> "SELECT_SINGLE".equals(extra.getType()))
+                .flatMap(extra -> extra.getRatesAndServices().stream())
+                .mapToLong(RatesAndServices::getPrice)
+                .min()
+                .orElse(price);
+    }
+
 
 
     public Post(String name, long price, String title, String postType, String paymentType, String deliveryType, PostStatus status) {
