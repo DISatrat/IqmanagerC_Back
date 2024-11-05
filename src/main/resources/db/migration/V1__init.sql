@@ -490,6 +490,12 @@ ALTER TABLE conditions ADD COLUMN `post_id` BIGINT(19) NOT NULL;
 ALTER TABLE conditions ADD CONSTRAINT fk_post_conditions_id FOREIGN KEY (post_id) REFERENCES `post`(id);
 
 
+ALTER TABLE `iqmanager`.`post`
+    ADD COLUMN `template` BIGINT(19) NULL,
+    ADD CONSTRAINT `fk_post_category`
+        FOREIGN KEY (`template`) REFERENCES `iqmanager`.`category`(`id`)
+            ON DELETE SET NULL;
+
 
 ALTER TABLE `iqmanager`.`order_element`
     ADD COLUMN `calendar_id` BIGINT(19) NULL;
