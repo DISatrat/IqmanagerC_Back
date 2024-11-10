@@ -13,5 +13,5 @@ public interface CategoryDAO extends JpaRepository<Category, Long> {
 
     List<Category> findAllByIdParentAndHidden(long parent_id, boolean hidden);
     List<Category> findAllByHidden(boolean hidden);
-    Category findCategoryById(long id);
+    Category findCategoryByIdAndHidden(long id, boolean hidden);
 }
