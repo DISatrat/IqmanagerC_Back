@@ -82,7 +82,6 @@ public class BasketController {
     }
 
     // оставить отзыв
-    // Principal principal
     @PostMapping("/giveFeedback")
     public ResponseEntity<?> addFeedback(@RequestBody FeedbackDTO feedbackDTO) {
         try {

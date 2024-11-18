@@ -74,7 +74,7 @@ public class PostServiceImpl implements PostService {
     }
 
 
-    // NEW Добавление отзывов
+    //  Добавление отзывов
     @Override
     public void addNewFeedback(long postId, String username, String feedbackText, byte stars) {
         Post post = postDAO.findPostById(postId);
@@ -83,6 +83,25 @@ public class PostServiceImpl implements PostService {
         newComment.setDate(Instant.now());
         post.getComments().add(newComment);
         commentDAO.save(newComment);
+        post.setStars(updatePostStars(postId));
+        postDAO.save(post);
+    }
+
+    // Обновление рейтинга
+    private byte updatePostStars(long postId) {
+        Post post = postDAO.findPostById(postId);
+
+        List<Byte> commentsStars = commentDAO.findAllByPost(post).stream()
+                .map(Comment::getStars)
+                .collect(Collectors.toList());
+
+        double averageStars = commentsStars.stream()
+                .mapToInt(Byte::intValue)
+                .average()
+                .orElse(0.0);
+
+
+        return (byte) Math.round(averageStars);
     }
 
     // реализация поиска
