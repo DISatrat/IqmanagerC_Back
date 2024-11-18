@@ -69,11 +69,18 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories;
 
         if (parent_id == 0L) {
-            categories = categoryDAO.findAllByIdParentAndHidden(0,false);
+//            categories = categoryDAO.findAllByIdParentAndHidden(0,false);
+//
+//            List<Category> childCategories = categoryRelationshipDAO.findChildCategoriesWithMultipleParents();
+//
+//            categories.removeAll(childCategories);
+            Category parentCategory = categoryDAO.findCategoryByIdAndHidden(1665,false);
 
-            List<Category> childCategories = categoryRelationshipDAO.findChildCategoriesWithMultipleParents();
-
-            categories.removeAll(childCategories);
+//            if (parentCategory.getIdParent() == 0L) {
+            List<CategoryRelationship> categoriesRelationship = categoryRelationshipDAO.findCategoryRelationshipsByParentCategory(parentCategory);
+            categories = categoriesRelationship.stream()
+                    .map(CategoryRelationship::getChildCategory)
+                    .collect(Collectors.toList());
 
         } else {
             Category parentCategory = categoryDAO.findCategoryByIdAndHidden(parent_id,false);

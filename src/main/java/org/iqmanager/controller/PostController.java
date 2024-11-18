@@ -194,7 +194,7 @@ public class PostController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-    @PostMapping("/filterPosts")
+    @GetMapping("/filterPosts")
     public ResponseEntity<Map<String, Object>> filterPosts(@RequestParam(value = "category") String category,
                                                            @RequestParam(value = "priceMin", required = false) Long priceMin,
                                                            @RequestParam(value = "priceMax", required = false) Long priceMax,
