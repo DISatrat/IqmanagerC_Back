@@ -25,7 +25,11 @@ public class BannerServiceImpl implements BannerService {
         List<Banner> banners = bannerDAO.findAll(Sort.by(Sort.Direction.ASC, "serialNumber"));
         return banners.stream()
                 .filter(Banner::isBannerVisible)
-                .map(banner -> modelMapper.map(banner, BannerToShowDTO.class))
+                .map(banner -> {
+                    BannerToShowDTO dto = modelMapper.map(banner, BannerToShowDTO.class);
+                    dto.setBannerBackgroundImage(banner.getBannerBackground());
+                    return dto;
+                })
                 .collect(Collectors.toList());
     }
 }
