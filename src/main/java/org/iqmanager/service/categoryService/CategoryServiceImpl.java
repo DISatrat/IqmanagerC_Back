@@ -69,30 +69,31 @@ public class CategoryServiceImpl implements CategoryService {
         List<Category> categories;
 
         if (parent_id == 0L) {
-//            categories = categoryDAO.findAllByIdParentAndHidden(0,false);
-//
-//            List<Category> childCategories = categoryRelationshipDAO.findChildCategoriesWithMultipleParents();
-//
-//            categories.removeAll(childCategories);
-            Category parentCategory = categoryDAO.findCategoryByIdAndHidden(1665,false);
+            categories = categoryDAO.findAllByIdParentAndHidden(0,false);
+
+            List<Category> childCategories = categoryRelationshipDAO.findChildCategoriesWithMultipleParents();
+
+            categories.removeAll(childCategories);
+//            Category parentCategory = categoryDAO.findCategoryByIdAndHidden(1665,false);
 
 //            if (parentCategory.getIdParent() == 0L) {
-            List<CategoryRelationship> categoriesRelationship = categoryRelationshipDAO.findCategoryRelationshipsByParentCategory(parentCategory);
-            categories = categoriesRelationship.stream()
-                    .map(CategoryRelationship::getChildCategory)
-                    .collect(Collectors.toList());
+//            List<CategoryRelationship> categoriesRelationship = categoryRelationshipDAO.findCategoryRelationshipsByParentCategory(parentCategory);
+//            categories = categoriesRelationship.stream()
+//                    .map(CategoryRelationship::getChildCategory)
+//                    .collect(Collectors.toList());
 
         } else {
             Category parentCategory = categoryDAO.findCategoryByIdAndHidden(parent_id,false);
 
-//            if (parentCategory.getIdParent() == 0L) {
+             if (parentCategory.getIdParent() == 0L) {
                 List<CategoryRelationship> categoriesRelationship = categoryRelationshipDAO.findCategoryRelationshipsByParentCategory(parentCategory);
                 categories = categoriesRelationship.stream()
                         .map(CategoryRelationship::getChildCategory)
                         .collect(Collectors.toList());
-//            } else {
-//                categories = Collections.emptyList();
-//            }
+
+            } else {
+                categories = Collections.emptyList();
+            }
         }
 
         List<CategoryDTO> categoryDTOList = categories.stream()
