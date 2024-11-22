@@ -123,7 +123,7 @@ public class PostServiceImpl implements PostService {
      */
     @Override
 //    @Cacheable("quantityPosts")
-    public long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars) {
+    public long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars, Instant date) {
         Category category = categoryDAO.getOne(id);
         return postDAO.countByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualAndStatus(
                 category, country, region, minStars, maxStars, minPrice, maxPrice, PostStatus.PUBLISHED);
@@ -147,10 +147,15 @@ public class PostServiceImpl implements PostService {
      */
     @Override
     @Cacheable("getPosts")
-    public List<PostListDTO> getPostsPagination(long id, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, int page, int quantity) {
+    public List<PostListDTO> getPostsPagination(long id, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Instant date, int page, int quantity) {
 
         List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegion(categoryDAO.getOne(id), country, region, minStars, maxStars, minPrice, maxPrice, PageRequest.of(page, quantity));
-        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
+        List<Post> filteredPosts = postListDTOS.stream()
+                .filter(x -> PostStatus.PUBLISHED.equals(x.getStatus()))
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return postsToDTO(filteredPosts);
     }
 
     @Override
@@ -194,41 +199,55 @@ public class PostServiceImpl implements PostService {
      * Объявление с пагинацией по возрастанию цены
      */
     @Override
-    public List<PostListDTO> getPostsPaginationOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
+    public List<PostListDTO> getPostsPaginationOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Instant date, Pageable pageable) {
         List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceAsc(
                 category, country, region, minStars, maxStars, minPrice, maxPrice, pageable);
 
-        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
+        List<Post> filteredPosts = postListDTOS.stream()
+                .filter(x -> PostStatus.PUBLISHED.equals(x.getStatus()))
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return postsToDTO(filteredPosts);
     }
 
-    /**
-     * Объявление с пагинацией по убыванию цены
-     */
     @Override
-    public List<PostListDTO> getPostsPaginationOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceDesc(category,
-                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
-        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
+    public List<PostListDTO> getPostsPaginationOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Instant date, Pageable pageable) {
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByPriceDesc(
+                category, country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+
+        List<Post> filteredPosts = postListDTOS.stream()
+                .filter(x -> PostStatus.PUBLISHED.equals(x.getStatus()))
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return postsToDTO(filteredPosts);
     }
 
-    /**
-     * Объявление с пагинацией по возрастанию оцеки
-     */
     @Override
-    public List<PostListDTO> getPostsPaginationOrderByStarsAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsAsc(category,
-                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
-        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
+    public List<PostListDTO> getPostsPaginationOrderByStarsAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Instant date, Pageable pageable) {
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsAsc(
+                category, country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+
+        List<Post> filteredPosts = postListDTOS.stream()
+                .filter(x -> PostStatus.PUBLISHED.equals(x.getStatus()))
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return postsToDTO(filteredPosts);
     }
 
-    /**
-     * Объявление с пагинацией по убыванию оцеки
-     */
     @Override
-    public List<PostListDTO> getPostsPaginationOrderByStarsDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable) {
-        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsDesc(category,
-                country, region, minStars, maxStars, minPrice, maxPrice, pageable);
-        return postsToDTO(postListDTOS.stream().filter(x-> PostStatus.PUBLISHED.equals(x.getStatus())).collect(Collectors.toList()));
+    public List<PostListDTO> getPostsPaginationOrderByStarsDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Instant date, Pageable pageable) {
+        List<Post> postListDTOS = postDAO.findAllByCategoriesAndCountryAndRegionAndStarsGreaterThanEqualAndStarsLessThanEqualAndPriceGreaterThanEqualAndPriceLessThanEqualOrderByStarsDesc(
+                category, country, region, minStars, maxStars, minPrice, maxPrice, pageable);
+
+        List<Post> filteredPosts = postListDTOS.stream()
+                .filter(x -> PostStatus.PUBLISHED.equals(x.getStatus()))
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return postsToDTO(filteredPosts);
     }
 
     @Override
@@ -248,14 +267,30 @@ public class PostServiceImpl implements PostService {
                 postPage.getTotalElements()
         );
     }
+    @Override
+    public Page<PostListDTO> filterPostsByDate( Instant date, Pageable pageable) {
+        Page<Post> postPage = postDAO.findAll(pageable);
+
+        List<Post> filteredPosts = postPage.getContent().stream()
+                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(
+                filteredPosts.stream()
+                        .map(post -> modelMapper.map(post, PostListDTO.class))
+                        .collect(Collectors.toList()), pageable, postPage.getTotalElements()
+        );
+    }
 
     private boolean isPerformerAvailable(PerformerData performer, Instant date) {
+        if (date == null) {
+            return true;
+        }
         List<Calendar> calendars = calendarDAO.getAllByPerformer(performer);
         return calendars.stream().noneMatch(calendar ->
                 (calendar.getStatus() == CalendarStatus.BUSY || calendar.getStatus() == CalendarStatus.DAY_OFF) &&
                         !date.isBefore(calendar.getBeginDate()) && !date.isAfter(calendar.getEndDate()));
     }
-
     /**
      * Получить исполнителя по объявлению
      */
