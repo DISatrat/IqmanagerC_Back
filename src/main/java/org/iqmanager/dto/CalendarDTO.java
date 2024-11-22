@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.iqmanager.models.Calendar;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,10 +20,10 @@ public class CalendarDTO {
     private long id;
 
     /** Дата начала */
-    long beginDate;
+    Instant beginDate;
 
     /** Дата конца */
-    long endDate;
+    Instant endDate;
 
     /** Изменение цены */
     byte changePrice;
@@ -30,7 +31,7 @@ public class CalendarDTO {
     /** Статус */
     String status;
 
-    public CalendarDTO(long id, long beginDate, long endDate, byte changePrice, String status) {
+    public CalendarDTO(long id, Instant beginDate, Instant endDate, byte changePrice, String status) {
         this.id = id;
         this.beginDate = beginDate;
         this.endDate = endDate;
@@ -41,8 +42,8 @@ public class CalendarDTO {
     public static List<CalendarDTO> calendarToDTO(List<Calendar> calendars) {
         return calendars.stream().map(x ->
                 new CalendarDTO(x.getId(),
-                        x.getBeginDate().getEpochSecond(),
-                        x.getEndDate().getEpochSecond(),
+                        x.getBeginDate(),
+                        x.getEndDate(),
                         x.getChangePrice(),
                         x.getStatus().name())).collect(Collectors.toList());
     }
