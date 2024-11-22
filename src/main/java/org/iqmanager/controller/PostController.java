@@ -1,11 +1,8 @@
 package org.iqmanager.controller;
 
 import org.iqmanager.dto.*;
-import org.iqmanager.models.Category;
 import org.iqmanager.models.Conditions;
 import org.iqmanager.models.OrderElement;
-import org.iqmanager.models.PerformerData;
-import org.iqmanager.repository.CategoryDAO;
 import org.iqmanager.service.calendarService.CalendarService;
 import org.iqmanager.service.categoryService.CategoryService;
 import org.iqmanager.service.extraService.ExtraService;
@@ -19,15 +16,12 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.*;
 

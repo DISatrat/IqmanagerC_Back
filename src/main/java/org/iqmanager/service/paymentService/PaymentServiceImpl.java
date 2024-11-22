@@ -1,10 +1,8 @@
 package org.iqmanager.service.paymentService;
 
 import org.iqmanager.dto.PaymentDTO;
-import org.iqmanager.models.Contract;
-import org.iqmanager.models.OrderElement;
-import org.iqmanager.models.Payment;
-import org.iqmanager.models.Post;
+import org.iqmanager.models.*;
+import org.iqmanager.models.enum_models.CalendarStatus;
 import org.iqmanager.models.enum_models.PaymentStatus;
 import org.iqmanager.models.enum_models.StatusOrder;
 import org.iqmanager.repository.ContractDAO;
@@ -77,6 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         if (payment.getPaymentStatus() == PaymentStatus.succeeded && orderElement.getStatusOrder().equals(StatusOrder.WAITING_PAYMENT.name())) {
                 orderElement.setLeftToPay(orderElement.getLeftToPay() - paymentAmount);
             }
+            orderElement.setStatusOrder(StatusOrder.WAITING_EXECUTION.name());
             if (orderElement.getLeftToPay() == 0) {
                 orderElement.setStatusOrder(StatusOrder.WAITING_EXECUTION.name());
             }

@@ -12,7 +12,7 @@ import java.util.List;
 @RepositoryRestController
 public interface CalendarDAO extends JpaRepository<Calendar, Long> {
     List<Calendar> getAllByPerformer(PerformerData performerData);
-    List<Calendar> findCalendarByPost(Post post);
+    List<Calendar> findCalendarByPostOrPerformer(Post post, PerformerData performerData);
 
     List<Calendar> findByBeginDateBeforeAndEndDateAfter(Instant beginDate,  Instant endDate );
 
