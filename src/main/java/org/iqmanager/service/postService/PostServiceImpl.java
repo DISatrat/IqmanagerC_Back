@@ -267,20 +267,7 @@ public class PostServiceImpl implements PostService {
                 postPage.getTotalElements()
         );
     }
-    @Override
-    public Page<PostListDTO> filterPostsByDate( Instant date, Pageable pageable) {
-        Page<Post> postPage = postDAO.findAll(pageable);
 
-        List<Post> filteredPosts = postPage.getContent().stream()
-                .filter(post -> isPerformerAvailable(post.getPerformer(), date))
-                .collect(Collectors.toList());
-
-        return new PageImpl<>(
-                filteredPosts.stream()
-                        .map(post -> modelMapper.map(post, PostListDTO.class))
-                        .collect(Collectors.toList()), pageable, postPage.getTotalElements()
-        );
-    }
 
     private boolean isPerformerAvailable(PerformerData performer, Instant date) {
         if (date == null) {

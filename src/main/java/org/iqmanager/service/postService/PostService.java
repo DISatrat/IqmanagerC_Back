@@ -29,7 +29,7 @@ public interface PostService {
     List<PostListDTO> getListPosts(Category category);
 
     Page<PostListDTO> filterPosts(String category, Long priceMin, Long priceMax, Instant date, Pageable pageable);
-    Page<PostListDTO> filterPostsByDate(Instant date, Pageable pageable);
+
     void updatePostViews(long id, long newViews);
     Post findPostById(long id);
 
