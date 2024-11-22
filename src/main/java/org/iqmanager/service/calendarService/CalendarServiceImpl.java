@@ -4,6 +4,7 @@ import org.iqmanager.models.Calendar;
 import org.iqmanager.models.PerformerData;
 import org.iqmanager.models.Post;
 import org.iqmanager.models.enum_models.CalendarStatus;
+import org.iqmanager.models.enum_models.CalendarType;
 import org.iqmanager.repository.CalendarDAO;
 import org.iqmanager.repository.PostDAO;
 import org.iqmanager.service.performerService.PerformerService;
@@ -52,17 +53,29 @@ public class CalendarServiceImpl implements CalendarService {
         return allByPerformer;
     }
 
+//    @Override
+//    @Transactional(readOnly = true)
+//    public List<Calendar> getCalendarByPosts(long id) {
+//        Post post = postDAO.findPostById(id);
+//        List<Calendar> calendars = calendarDAO.findCalendarByPostOrPerformer(post, post.getPerformer());
+//
+//        return calendars;
+//    }
     @Override
     @Transactional(readOnly = true)
     public List<Calendar> getCalendarByPosts(long id) {
         Post post = postDAO.findPostById(id);
-        List<Calendar> calendars = calendarDAO.findCalendarByPostOrPerformer(post, post.getPerformer());
 
-//        calendars.forEach(x -> x.setBeginDate(x.getBeginDate().plus(3, ChronoUnit.HOURS)));
-//        calendars.forEach(x -> x.setEndDate(x.getEndDate().plus(3, ChronoUnit.HOURS)));
+        List<Calendar> postCalendars = calendarDAO.findCalendarsByPost(post);
 
-        return calendars;
+        if (!postCalendars.isEmpty()) {
+            return postCalendars;
+        }
+
+        return calendarDAO.findCalendarsByPostIsNullAndPerformer( post.getPerformer());
     }
+
+
 
     @Override
     public List<Calendar> getCalendarByPost(Long postId) {
