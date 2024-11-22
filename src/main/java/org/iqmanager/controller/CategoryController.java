@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.nio.charset.StandardCharsets;
+import java.time.Instant;
 import java.util.*;
 
 import static org.iqmanager.ApplicationC.URL_WEB;
@@ -170,23 +171,24 @@ public class CategoryController {
                                                       @RequestParam(value = "pu", required = false, defaultValue = "false") boolean priceUp, // По возрастанию цены
                                                       @RequestParam(value = "pd", required = false, defaultValue = "false") boolean priceDown,// По убыванию цены
                                                       @RequestParam(value = "su", required = false, defaultValue = "false") boolean starsUp, // По возрастанию оценки
-                                                      @RequestParam(value = "sd", required = false, defaultValue = "false") boolean starsDown // По убыванию оценки
+                                                      @RequestParam(value = "sd", required = false, defaultValue = "false") boolean starsDown,// По убыванию оценки
+                                                      @RequestParam(value = "date", required = false) Instant date
     ) {
         try {
             List<PostListDTO> posts = null;
             Category category = categoryService.find(idCategory);
             if (!priceDown && !priceUp && !starsUp && !starsDown) {
-                posts = postService.getPostsPagination(idCategory, country, region, stars, (byte) 5, min, max, page, quantity);
+                posts = postService.getPostsPagination(idCategory, country, region, stars, (byte) 5, min, max, date, page, quantity);
             } else if (priceDown) {
-                posts = postService.getPostsPaginationOrderByPriceDesc(category, country, region, stars, (byte) 5, min, max, PageRequest.of(page, quantity));
+                posts = postService.getPostsPaginationOrderByPriceDesc(category, country, region, stars, (byte) 5, min, max, date, PageRequest.of(page, quantity));
             } else if (priceUp) {
-                posts = postService.getPostsPaginationOrderByPriceAsc(category, country, region, stars, (byte) 5, min, max, PageRequest.of(page, quantity));
+                posts = postService.getPostsPaginationOrderByPriceAsc(category, country, region, stars, (byte) 5, min, max, date,PageRequest.of(page, quantity));
             }
             else if (starsDown) {
-                posts = postService.getPostsPaginationOrderByStarsDesc(category, country, region, stars, (byte) 5,min, max, PageRequest.of(page, quantity));
+                posts = postService.getPostsPaginationOrderByStarsDesc(category, country, region, stars, (byte) 5,min, max, date, PageRequest.of(page, quantity));
             }
             else if (starsUp) {
-                posts = postService.getPostsPaginationOrderByStarsAsc(category, country, region, stars, (byte) 5, min, max, PageRequest.of(page, quantity));
+                posts = postService.getPostsPaginationOrderByStarsAsc(category, country, region, stars, (byte) 5, min, max, date, PageRequest.of(page, quantity));
             }
 
             if (!posts.isEmpty()) {
@@ -213,10 +215,11 @@ public class CategoryController {
                                                 @RequestParam(value = "r") String region, // Регион
                                                 @RequestParam(value = "min", required = false, defaultValue = "0") long min, // min price
                                                 @RequestParam(value = "max", required = false, defaultValue = "10000000") long max, //max price
-                                                @RequestParam(value = "s", required = false, defaultValue = "0") byte stars // Минимальная оценка
+                                                @RequestParam(value = "s", required = false, defaultValue = "0") byte stars,// Минимальная оценка
+                                                @RequestParam(value = "date", required = false) Instant date
     ) {
         try {
-            return ResponseEntity.ok(postService.getQuantityPosts(idCategory, country, region, min, max, stars, (byte) 5));
+            return ResponseEntity.ok(postService.getQuantityPosts(idCategory, country, region, min, max, stars, (byte) 5, date));
         } catch (Exception e) {
             e.printStackTrace();
             logger.warn("CategoryController -> getPosts ERROR");

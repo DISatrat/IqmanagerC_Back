@@ -15,20 +15,21 @@ import java.util.List;
 @Service
 public interface PostService {
     PostDTO getPostDTO(long id, long idCategory, String language);
-    List<PostListDTO> getPostsPagination(long id, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, int page, int quantity);
-    long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars);
+    List<PostListDTO> getPostsPagination(long id, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice,Instant date, int page, int quantity);
+    long getQuantityPosts(long id, String country, String region, long minPrice, long maxPrice, byte minStars, byte maxStars,Instant date);
     List<PostListDTO> getPostsForSearch(String request);
     Post getPost(long id);
     ArrayList<Long> getAllPostIdsByCategoryId(long id);
     ArrayList<Long> getAllPostIds();
-    List<PostListDTO> getPostsPaginationOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);
-    List<PostListDTO> getPostsPaginationOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);
-    List<PostListDTO> getPostsPaginationOrderByStarsAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);
-    List<PostListDTO> getPostsPaginationOrderByStarsDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice, Pageable pageable);
+    List<PostListDTO> getPostsPaginationOrderByPriceAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice,Instant date, Pageable pageable);
+    List<PostListDTO> getPostsPaginationOrderByPriceDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice,Instant date, Pageable pageable);
+    List<PostListDTO> getPostsPaginationOrderByStarsAsc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice,Instant date, Pageable pageable);
+    List<PostListDTO> getPostsPaginationOrderByStarsDesc(Category category, String country, String region, byte minStars, byte maxStars, long minPrice, long maxPrice,Instant date, Pageable pageable);
     PerformerData getPerformerByPostId(long id);
     List<PostListDTO> getListPosts(Category category);
 
     Page<PostListDTO> filterPosts(String category, Long priceMin, Long priceMax, Instant date, Pageable pageable);
+
     void updatePostViews(long id, long newViews);
     Post findPostById(long id);
 
