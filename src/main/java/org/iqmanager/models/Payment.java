@@ -73,9 +73,13 @@ public class Payment {
     @Column(name = "created_at")
     private Instant createdAt;
 
-    /** Сумма к выплате исполнителю */
-    @Column(name = "pay_to_performer")
-    private BigDecimal payToPerformer;
+    /**Оплачен ли заказ исполнителю**/
+    @Column(name = "is_paid_to_perf")
+    private boolean isPaidToPerf;
+
+    /**Чек оплаты исполнителю**/
+    @Column(name = "payment_to_perf_pdf")
+    private String payToPerfPDF;
 
     /** Заказ */
     @ManyToOne(fetch = FetchType.LAZY)

@@ -63,12 +63,12 @@ public class OrderElemDTO {
         return servicesId;
     }
 
-    public double getFactor() {
-        if(duration != 0)
-            return duration;
-        if(people != 0)
+    public double getFactor(String PaymentType, String PostType) {
+        if(PaymentType.equals("PEOPLE")) {
             return people;
-        if(quantity != 0) {
+        } else if(PaymentType.equals("HOURS")) {
+            return duration;
+        }else if(PostType.equals("PRODUCT") && quantity!= 0 ) {
             return quantity;
         }
         return 0;

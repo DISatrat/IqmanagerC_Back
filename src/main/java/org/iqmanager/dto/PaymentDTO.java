@@ -19,7 +19,6 @@ public class PaymentDTO {
     private PaymentMethod paymentMethod;
     private BigDecimal price;
     private BigDecimal paidInterest;
-    private BigDecimal payToPerformer;
     private PaymentStatus paymentStatus;
     private boolean isTest;
     private BigDecimal refundedAmount;

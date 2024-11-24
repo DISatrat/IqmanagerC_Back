@@ -4,8 +4,8 @@ CREATE TABLE `iqmanager`.`category` (
     `id_parent` BIGINT(19) NOT NULL,
     `final` BOOLEAN NOT NULL DEFAULT FALSE,
     `hidden` BOOLEAN NOT NULL DEFAULT FALSE,
-    `image` varchar(50) NULL,
-    `blur_image` VARCHAR(100) NULL,
+    `image` varchar(300) NULL,
+    `blur_image` VARCHAR(300) NULL,
     PRIMARY KEY (`id`)
 );
 CREATE TABLE `parent_x_child_category` (
@@ -24,7 +24,7 @@ CREATE TABLE `parent_x_child_category` (
 
 CREATE TABLE `iqmanager`.`category_name`(
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(300) NOT NULL,
     `language` VARCHAR(10) NOT NULL,
     `id_category` BIGINT(19) NOT NULL,
     CONSTRAINT fk_category_name FOREIGN KEY (id_category)  REFERENCES category (id)
@@ -50,9 +50,9 @@ CREATE TABLE `iqmanager`.`extra` (
 
 CREATE TABLE `iqmanager`.`rates_and_services` (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(300) NOT NULL,
     `price` BIGINT(5) NOT NULL,
-    `image` VARCHAR(100) NULL
+    `image` VARCHAR(300) NULL
 );
 
 
@@ -92,7 +92,9 @@ CREATE TABLE `iqmanager`.`payment` (
     `currency` VARCHAR(50) DEFAULT 'RUB',
     `created_at` DATETIME NOT NULL,
     `order_element_id` BIGINT NOT NULL,
-    `pay_to_performer` DECIMAL(19,4) NULL,
+    `is_paid_to_perf`  BOOLEAN DEFAULT FALSE,
+    `payment_to_perf_pdf` VARCHAR(300) NULL,
+
     CONSTRAINT fk_order_element FOREIGN KEY (order_element_id) REFERENCES order_element(id)
 
 );
@@ -100,10 +102,10 @@ CREATE TABLE `iqmanager`.`payment` (
 #Объявление
 CREATE TABLE `iqmanager`.`post` (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT ,
-    `name` VARCHAR(50) NOT NULL,
-    `image` VARCHAR(100) NULL,
-    `zip_image` VARCHAR(100) NULL,
-    `blur_image` VARCHAR(100) NULL,
+    `name` VARCHAR(500) NOT NULL,
+    `image` VARCHAR(300) NULL,
+    `zip_image` VARCHAR(300) NULL,
+    `blur_image` VARCHAR(300) NULL,
     `currency` VARCHAR(50) DEFAULT 'RUB',
     `price` BIGINT(7) NOT NULL,
     `price_in_rubles` BIGINT(7) DEFAULT 0,
@@ -178,7 +180,7 @@ CREATE TABLE `iqmanager`.`user_data` (
 # Картинки к посту
 CREATE TABLE `iqmanager`.`images` (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
-    `path` VARCHAR(60) NOT NULL,
+    `path` VARCHAR(300) NOT NULL,
     `id_post` BIGINT(19) NOT NULL,
     CONSTRAINT fk_img_post FOREIGN KEY (id_post)  REFERENCES post (id) ,
     PRIMARY KEY (`id`));
@@ -186,7 +188,7 @@ CREATE TABLE `iqmanager`.`images` (
 # Видео к посту
 CREATE TABLE `iqmanager`.`video` (
     `id` BIGINT(19) NOT NULL AUTO_INCREMENT,
-    `path` VARCHAR(60) NOT NULL,
+    `path` VARCHAR(700) NOT NULL,
     `id_post` BIGINT(19) NOT NULL,
     CONSTRAINT fk_video_post FOREIGN KEY (id_post)  REFERENCES post (id) ,
     PRIMARY KEY (`id`));
@@ -388,7 +390,7 @@ CREATE TABLE `iqmanager`.`contract` (
   `card_holder_fio`VARCHAR(100) NULL,
   `ogrnip` VARCHAR(45) NULL,
   `signature` VARCHAR(100) NULL,
-  `path` VARCHAR(100) NOT NULL,
+  `path` VARCHAR(300) NOT NULL,
   `performer_id` BIGINT(19),
   PRIMARY KEY (`id`),
   CONSTRAINT fk_contract_performer_id FOREIGN KEY (performer_id) REFERENCES `performer_data`(id)
@@ -429,7 +431,7 @@ CREATE TABLE request(
     `phone` VARCHAR(20) NOT NULL,
     `comment` LONGTEXT NULL,
     `date_order` DATETIME NOT NULL,
-    `image` VARCHAR(60),
+    `image` VARCHAR(300),
     `control` BIGINT(19),
     CONSTRAINT fk_req_control FOREIGN KEY (control) REFERENCES admin_data(id)
 );
@@ -456,12 +458,12 @@ CREATE TABLE promo (
     `name`  VARCHAR(255),
     `status` VARCHAR(255) NOT NULL,
     `date` DATETIME,
-    `rules` VARCHAR(255)
+    `rules` VARCHAR(300)
 );
 
 CREATE TABLE images_x_promo (
     `id` BIGINT(19) NOT NULL PRIMARY KEY AUTO_INCREMENT,
-    `path` VARCHAR(60) NOT NULL,
+    `path` VARCHAR(600) NOT NULL,
     `id_promo` BIGINT(19) NOT NULL,
     CONSTRAINT fk_img_promo FOREIGN KEY (id_promo)  REFERENCES promo (id)
 );
