@@ -177,8 +177,10 @@ public class OrderElementServiceImpl implements OrderElementService {
         }
         if (Objects.equals(post.getPaymentType(), "HOURS_AND_FIX")) {
             result = (long) (post.getPrice() + post.getConditions().getAdditionalPrice() * orderElemDTO.getDuration());
+        } else if (Objects.equals(post.getPaymentType(), "FIX") && !Objects.equals(post.getPostType(), "PRODUCT")) {
+            result = (long) (tariff + priceRates);
         } else {
-            result = (long) ((tariff * orderElemDTO.getFactor()) + priceRates);
+            result = (long) ((tariff * orderElemDTO.getFactor((post.getPaymentType()), (post.getPostType())) + priceRates));
         }
 
         List<Calendar> calenders = calendarService.getCalendarByPost(orderElemDTO.getIdPost());
@@ -187,7 +189,7 @@ public class OrderElementServiceImpl implements OrderElementService {
         long endEvent = orderElemDTO.getDateEvent().plusSeconds((long) (orderElemDTO.getDuration() * 3600)).getEpochSecond();
 
         for (Calendar calendar : calenders) {
-            long tFactor = (long) (tariff * orderElemDTO.getFactor());
+            long tFactor = (long) (tariff * orderElemDTO.getFactor((post.getPaymentType()), (post.getPostType())));
             if (beginEvent >= calendar.getBeginDate().getEpochSecond()) {
                 if (endEvent <= calendar.getEndDate().getEpochSecond()) {
                     // Полное совпадение
