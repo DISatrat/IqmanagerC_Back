@@ -31,6 +31,4 @@ public enum StatusOrder {
     /** Подана заявка на возврат средств */
     REFUND_REQUESTED,
 
-    /**Выполнен и оплачен iqmanager**/
-    EXECUTED_AND_PAID
 }
